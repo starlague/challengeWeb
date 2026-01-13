@@ -1,0 +1,15 @@
+{
+    "name": "sarah/challenge-web",
+    "autoload": {
+        "psr-4": {
+            "Sarah\\ChallengeWeb\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "starlague",
+            "email": "nathalie.tuernal@gmail.com"
+        }
+    ],
+    "require": {}
+}
