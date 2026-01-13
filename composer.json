@@ -2,7 +2,7 @@
     "name": "sarah/challenge-web",
     "autoload": {
         "psr-4": {
-            "Sarah\\ChallengeWeb\\": "src/"
+            "App\\": "src/"
         }
     },
     "authors": [
