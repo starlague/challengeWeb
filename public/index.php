@@ -1,5 +1,7 @@
 <?php 
 
+session_start();
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Controllers\HomeController;
@@ -9,7 +11,7 @@ $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $path = str_replace('/public', '', $path);
 $path = $path === '' ? '/' : $path;
 
-$controller = new UserController();
+$data = ['title' => 'Blog', 'content' => ''];
 
 if ($path === '/') {
     $controller = new HomeController();
@@ -17,6 +19,14 @@ if ($path === '/') {
 } elseif ($path === '/users') {
     $controller = new UserController();
     $data = $controller->listUsers();
+} elseif ($path === '/register') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $controller = new UserController();
+        $controller->createUser();
+    } else {
+        $controller = new UserController();
+        $data = $controller->showRegister();
+    }
 } else {
     $data = ['title' => 'Erreur', 'content' => '404 - Page non trouvée'];
 }

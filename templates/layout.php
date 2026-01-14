@@ -9,6 +9,7 @@
     <nav>
         <a href="/">Accueil</a>
         <a href="/users">Utilisateurs</a>
+        <a href="/register">Inscription</a>
     </nav>
     <main>
         <?= $content ?>
