@@ -10,7 +10,7 @@ class UserController {
         $users = $user->getAllUsers();
         
         ob_start();
-        require __DIR__ . '/../views/user.php/index.php';
+        require __DIR__ . '/../views/user/index.php';
         $content = ob_get_clean();
         
         return [
@@ -21,7 +21,7 @@ class UserController {
 
     public function showRegister() {
         ob_start();
-        require __DIR__ . '/../views/user.php/register.php';
+        require __DIR__ . '/../views/user/register.php';
         $content = ob_get_clean();
         
         return [
@@ -53,6 +53,14 @@ class UserController {
             //save the data
             $user->saveUser();
 
+            $_SESSION["user"] = [
+                "id" => $user->getId(),
+                "username"=> $user->getUsername(),
+                "email"=> $user->getEmail(),
+                "password"=> $user->getPassword(),
+                "bio"=> $user->getBio(),
+            ];
+
             header('Location: /users');
             exit;
 
@@ -60,6 +68,50 @@ class UserController {
             //display the message and redirect
             $_SESSION['error'] = $e->getMessage();
             header('Location: /register');
+            exit;
+        }
+    }
+
+    public function showLogin(){
+        ob_start();
+        require __DIR__ . '/../views/user/login.php';
+        $content = ob_get_clean();
+        
+        return [
+            'title' => 'Connexion',
+            'content' => $content
+        ];
+    }
+
+    public function loginUser() {
+        try {
+            //check the POST method
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new \Exception('Méthode non autorisée');
+            }
+
+            $email = $_POST['email'];
+            $password = $_POST['password'];
+
+            $user = User::findByEmail($email);
+
+            if (!password_verify($password, $user['password'])) {
+                throw new \Exception('Email ou mot de passe incorrect');
+            }
+
+            $_SESSION["user"] = [
+                "id" => $user['id'],
+                "username"=> $user['username'],
+                "email"=> $user['email'],
+                "password"=> $user['password'],
+                "bio"=> $user['bio'],
+            ];
+
+            header('Location: /');
+            exit;
+        } catch (\Exception $e) {
+            $_SESSION['error'] = $e->getMessage();
+            header('Location: /login');
             exit;
         }
     }

@@ -76,4 +76,11 @@ class User {
         $stmt = $pdo->prepare("INSERT INTO users (username, email, password, bio) VALUES (?, ?, ?, ?)");
         $stmt->execute([$this->username, $this->email, $hashedPassword, $this->bio]);
     }
+
+    public static function findByEmail($email){
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
