@@ -6,8 +6,12 @@
     <title>Blog - <?= $title ?></title>
 </head>
 <body>
+    <nav>
+        <a href="/">Accueil</a>
+        <a href="/users">Utilisateurs</a>
+    </nav>
     <main>
-        <?= $content?>
+        <?= $content ?>
     </main>
 </body>
 </html>
