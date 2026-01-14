@@ -57,7 +57,6 @@ class UserController {
                 "id" => $user->getId(),
                 "username"=> $user->getUsername(),
                 "email"=> $user->getEmail(),
-                "password"=> $user->getPassword(),
                 "bio"=> $user->getBio(),
             ];
 
@@ -103,7 +102,6 @@ class UserController {
                 "id" => $user['id'],
                 "username"=> $user['username'],
                 "email"=> $user['email'],
-                "password"=> $user['password'],
                 "bio"=> $user['bio'],
             ];
 

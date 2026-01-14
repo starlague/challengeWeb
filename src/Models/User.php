@@ -83,4 +83,11 @@ class User {
         $stmt->execute([$email]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    public function updateUser()
+    {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("UPDATE user SET username = ?, email = ?, password = ?, bio = ? WHERE id = ?");
+        return $stmt->execute([$this->username, $this->email, $this->password, $this->bio, $this->id]);
+    }
 }
