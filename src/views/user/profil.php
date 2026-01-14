@@ -5,7 +5,7 @@
     <div><?= $user['bio']?></div>
     <div><?= $user['email']?></div>
 </div>
-<button>Modifier</button>
+<a href="/profil/update">Modifier </a>
 
 
 

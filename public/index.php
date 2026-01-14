@@ -43,6 +43,15 @@ if ($path === '/') {
 } elseif ($path === '/profil') {
     $controller = new UserController();
     $data = $controller->showUser();
+//update user profil
+} elseif ($path === '/profil/update') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $controller = new UserController();
+        $controller->updateProfil();
+    } else {
+        $controller = new UserController();
+        $data = $controller->showUpdate();
+    }
 }else {
     $data = ['title' => 'Erreur', 'content' => '404 - Page non trouvée'];
 }
