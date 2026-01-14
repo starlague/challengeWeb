@@ -12,7 +12,7 @@
     <nav class="d-flex gap-3 align-items-center justify-content-center">
         <a href="/">Accueil</a>
         <a href="/users">Utilisateurs</a>
-        <a href="">Voir votre profil</a>
+        <a href="/profil">Voir votre profil</a>
     </nav>
     <div class="d-flex gap-2 ms-auto align-items-center">
         <a href="/register">Inscription</a>

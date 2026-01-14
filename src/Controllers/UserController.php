@@ -115,4 +115,24 @@ class UserController {
             exit;
         }
     }
+
+    public function showUser(){
+        if (!isset($_SESSION['user'])) {
+            $_SESSION['error'] = "Vous devez être connecté pour voir cette page.";
+            header('Location: /login');
+            exit;
+        }
+
+        $user = $_SESSION['user'];
+
+        ob_start();
+        require __DIR__ . '/../views/user/profil.php';
+        $content = ob_get_clean();
+        
+        return [
+            'title' => 'Connexion',
+            'content' => $content,
+            'user' => $user
+        ];
+    }
 }    
