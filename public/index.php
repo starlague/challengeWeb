@@ -27,7 +27,15 @@ if ($path === '/') {
         $controller = new UserController();
         $data = $controller->showRegister();
     }
-} else {
+} elseif ($path === '/login') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $controller = new UserController();
+        $controller->loginUser();
+    } else {
+        $controller = new UserController();
+        $data = $controller->showLogin();
+    }    
+}else {
     $data = ['title' => 'Erreur', 'content' => '404 - Page non trouvée'];
 }
 
