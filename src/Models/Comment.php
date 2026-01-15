@@ -9,7 +9,7 @@ class Comment {
     // Créer un commentaire
     public static function create($idPost, $idUser, $content) {
         $pdo = Database::getInstance();
-        $stmt = $pdo->prepare("INSERT INTO comment (idPost, idUser, content) VALUES (?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO `comment` (idPost, idUser, content) VALUES (?, ?, ?)");
         $stmt->execute([$idPost, $idUser, $content]);
     }
 
