@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use App\Database;
@@ -21,5 +20,18 @@ class Post {
             ORDER BY p.id DESC
         ");
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
+
+    public static function getById($id) {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("SELECT * FROM post WHERE id = ?");
+        $stmt->execute([$id]);
+        return $stmt->fetch(\PDO::FETCH_ASSOC);
+    }
+
+    public static function delete($id) {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("DELETE FROM post WHERE id = ?");
+        $stmt->execute([$id]);
     }
 }

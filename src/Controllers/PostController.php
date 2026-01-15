@@ -1,32 +1,33 @@
 <?php
 namespace App\Controllers;
 
-use App\Database;
+use App\Models\Post;
+use App\Models\Comment;
 
 class PostController {
 
-    public function listPosts() {
-        $pdo = Database::getInstance();
-        $stmt = $pdo->query("
-            SELECT p.*, u.username 
-            FROM post p
-            JOIN users u ON p.idUser = u.id
-            ORDER BY p.id DESC
-        ");
-        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    public function listPostsWithComments() {
+        $posts = Post::getAll();
+        foreach ($posts as &$post) {
+            $post['comments'] = Comment::getByPost($post['id']);
+        }
+        return $posts;
     }
 
     public function createPost($idUser, $title, $content, $image = null) {
-        $pdo = Database::getInstance();
-        $stmt = $pdo->prepare("
-            INSERT INTO post (idUser, title, content, image)
-            VALUES (:idUser, :title, :content, :image)
-        ");
-        $stmt->execute([
-            ':idUser' => $idUser,
-            ':title' => $title,
-            ':content' => $content,
-            ':image' => $image
-        ]);
+        Post::create($idUser, $title, $content, $image);
+    }
+
+    public function deletePost($postId, $userId) {
+        $post = Post::getById($postId);
+
+        if (!$post) throw new \Exception("Post introuvable");
+        if ($post['idUser'] != $userId) throw new \Exception("Vous ne pouvez pas supprimer ce post");
+
+        if (!empty($post['image']) && file_exists(__DIR__ . '/../../public/assets/uploads/' . $post['image'])) {
+            unlink(__DIR__ . '/../../public/assets/uploads/' . $post['image']);
+        }
+
+        Post::delete($postId);
     }
 }
