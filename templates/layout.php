@@ -15,8 +15,12 @@
         <a href="/profil">Voir votre profil</a>
     </nav>
     <div class="d-flex gap-2 ms-auto align-items-center">
-        <a href="/register">Inscription</a>
-        <a href="/login">Connexion</a>
+        <?php if (!isset($_SESSION['user'])): ?>
+            <a href="/register">S'inscrire</a>
+            <a href="/login">Se connecter</a>
+        <?php else : ?>
+            <a href="/logout">Se déconnecter</a>
+        <?php endif; ?>
     </div>
 </header>
 <body>

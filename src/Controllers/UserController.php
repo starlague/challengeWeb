@@ -114,6 +114,14 @@ class UserController {
         }
     }
 
+    // public function logoutUser() {
+    //     session_start();
+    //     session_destroy();
+        
+    //     header('Location: /');
+    //     exit;
+    // }
+
     public function showUser(){
         if (!isset($_SESSION['user'])) {
             $_SESSION['error'] = "Vous devez être connecté pour voir cette page.";
