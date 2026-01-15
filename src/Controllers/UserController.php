@@ -78,18 +78,18 @@ class UserController {
                 throw new \Exception("Utilisateur introuvable");
             }
 
-            //old values
+            // Old values
             $oldUsername = $dbUser['username'];
             $oldEmail    = $dbUser['email'];
             $oldBio      = $dbUser['bio'];
             $oldPassword = $dbUser['password'];
 
-            //new values from the form
+            // New values from the form
             $newUsername = $_POST['username'] ?? '';
             $newEmail    = $_POST['email'] ?? '';
             $newBio      = $_POST['bio'] ?? '';
 
-            //if empty keep old values
+            // If empty keep old values
             $username = $newUsername !== '' ? $newUsername : $oldUsername;
             $email    = $newEmail    !== '' ? $newEmail    : $oldEmail;
             $bio      = $newBio      !== '' ? $newBio      : $oldBio;
@@ -111,7 +111,7 @@ class UserController {
                 throw new \Exception("Erreur lors de la mise à jour du profil");
             }
 
-            //update session
+            // Update session
             $_SESSION['user']['username'] = $username;
             $_SESSION['user']['email']    = $email;
             $_SESSION['user']['bio']      = $bio;
