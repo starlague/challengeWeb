@@ -1,11 +1,14 @@
 <?php
-session_start();
-
-require_once __DIR__ . '/../vendor/autoload.php';
 
 use App\Controllers\HomeController;
 use App\Controllers\UserController;
 use App\Controllers\CommentController;
+use App\Controllers\LoginController;
+use App\Controllers\RegisterController;
+
+session_start();
+
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $path = str_replace('/public', '', $path);
@@ -30,20 +33,20 @@ if ($path === '/') {
 //register
 } elseif ($path === '/register') {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $controller = new UserController();
+        $controller = new RegisterController();
         $controller->createUser();
     } else {
-        $controller = new UserController();
+        $controller = new RegisterController();
         $data = $controller->showRegister();
     }
 
 //login
 } elseif ($path === '/login') {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-        $controller = new UserController();
+        $controller = new LoginController();
         $controller->loginUser();
     } else {
-        $controller = new UserController();
+        $controller = new LoginController();
         $data = $controller->showLogin();
     }
 // AJAX : creating comments

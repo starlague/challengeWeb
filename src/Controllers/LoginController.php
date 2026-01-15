@@ -19,22 +19,23 @@ class LoginController {
     public function loginUser() {
         try {
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                throw new \Exception("Méthode non autorisée");
+                throw new \Exception('Méthode non autorisée');
             }
 
             $email = $_POST['email'];
             $password = $_POST['password'];
 
             $user = User::findByEmail($email);
-            if (!$user || !password_verify($password, $user['password'])) {
-                throw new \Exception("Email ou mot de passe incorrect");
+
+            if (!password_verify($password, $user['password'])) {
+                throw new \Exception('Email ou mot de passe incorrect');
             }
 
-            $_SESSION['user'] = [
-                'id' => $user['id'],
-                'username' => $user['username'],
-                'email' => $user['email'],
-                'bio' => $user['bio'],
+            $_SESSION["user"] = [
+                "id" => $user['id'],
+                "username"=> $user['username'],
+                "email"=> $user['email'],
+                "bio"=> $user['bio'],
             ];
 
             header('Location: /');
