@@ -18,25 +18,25 @@ class RegisterController {
 
 public function createUser() {
         try {
-            //check the POST method
+            // Check the POST method
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 throw new \Exception('Méthode non autorisée');
             }
 
-            //recover the data
+            // Recover the data
             $username = trim($_POST['username']);
             $email = trim($_POST['email']);
             $password = $_POST['password'];
             $bio = trim($_POST['bio']);
 
-            //create the user
+            // Create the user
             $user = new User();
             $user->setUsername($username);
             $user->setEmail($email);
             $user->setPassword($password);
             $user->setBio($bio);
 
-            //save the data
+            // Save the data
             $user->saveUser();
 
             $_SESSION["user"] = [
@@ -50,7 +50,7 @@ public function createUser() {
             exit;
 
         } catch (\Exception $e) {
-            //display the message and redirect
+            // Display the message and redirect
             $_SESSION['error'] = $e->getMessage();
             header('Location: /register');
             exit;

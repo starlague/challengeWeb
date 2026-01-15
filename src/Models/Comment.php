@@ -6,14 +6,14 @@ use PDO;
 
 class Comment {
 
-    // Créer un commentaire
+    // Create a comment
     public static function create($idPost, $idUser, $content) {
         $pdo = Database::getInstance();
         $stmt = $pdo->prepare("INSERT INTO `comment` (idPost, idUser, content) VALUES (?, ?, ?)");
         $stmt->execute([$idPost, $idUser, $content]);
     }
 
-    // Récupérer les commentaires d'un post (tri par id)
+    // Get comments for a post (sorted by id)
     public static function getByPost($idPost) {
         $pdo = Database::getInstance();
         $stmt = $pdo->prepare("

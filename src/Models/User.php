@@ -13,7 +13,7 @@ class User {
     private $bio;
     private $avatar;
 
-    //getters
+    // Getters
     public function getId() {
         return $this->id;
     }
@@ -33,7 +33,7 @@ class User {
         return $this->avatar;
     }
 
-    //setters
+    // Setters
     public function setId($id) {
         $this->id = $id;
     }
@@ -53,7 +53,7 @@ class User {
         $this->avatar = $avatar;
     }
 
-    //methods
+    // Methods
     public function getAllUsers() {
         $pdo = Database::getInstance();
         $stmt = $pdo->prepare("SELECT * FROM users");
