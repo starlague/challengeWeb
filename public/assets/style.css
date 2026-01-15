@@ -1,18 +1,3 @@
-.post {
-    border: 1px solid #ccc;
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-}
-
-.post-image {
-    max-width: 100%;
-    display: block;
-    margin-bottom: 10px;
-    border-radius: 5px;
-}
-
 .comments {
     margin-top: 15px;
     padding-left: 15px;
@@ -41,12 +26,89 @@
 .comment-form button {
     padding: 6px 12px;
     background-color: #ff69b4; /* rose */
+
+header {
+    background-color: black;
     color: white;
     border: none;
     border-radius: 5px;
-    cursor: pointer;
 }
 
 .comment-form button:hover {
     background-color: #8a2be2; /* violet */
+}
+}
+.sticky-top {
+    top: 10px;
+}
+body {
+    background-color: #f5f6fa;
+}
+
+
+/* home style */
+.post-form {
+    background-color: white;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.post {
+    border:1px solid #f5f6fa; 
+    padding:10px;
+    margin-bottom:15px;
+    background-color: white;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+.container-img {
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+.container-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* button and link style */
+.publish, .login, .submit {
+    color: white;
+    border: none;
+    border-radius: 5px;
+    background-color: #2563eb;
+    padding: 5px 10px;
+    transition: all ease 0.2s;
+}
+
+.link, .signin, .login, .logout {
+    text-decoration: none;
+}
+
+.logout {
+    background-color: red;
+    color: white;
+    border-radius: 5px;
+    padding: 5px 10px;
+    transition: all ease 0.2s;
+}
+
+.signin {
+    background-color: white;
+    color: #2563eb;
+    border-radius: 5px;
+    border: 2px solid #2563eb;
+    padding: 5px 10px;
+    transition: all ease 0.2s;
+}
+
+.login {
+    border: 2px solid #2563eb;
+    padding: 5px 10px;;
+}
+
+.publish:hover, .logout:hover, .login:hover, .signin:hover {
+    transform: scale(1.05);
 }

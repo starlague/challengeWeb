@@ -46,12 +46,6 @@ if ($path === '/') {
         $controller = new UserController();
         $data = $controller->showLogin();
     }
-
-// Profil utilisateur
-} elseif ($path === '/profil') {
-    $controller = new UserController();
-    $data = $controller->showUser();
-
 // AJAX : création de commentaire
 } elseif ($path === '/ajax/comment' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_SESSION['user'])) {
@@ -72,9 +66,27 @@ if ($path === '/') {
         'content' => htmlspecialchars($content)
     ]);
     exit;
-
-// Page non trouvée
-} else {
+//logout
+} elseif ($path === '/logout') {
+    session_start();
+    session_destroy();
+        
+    header('Location: /');
+    exit;
+//user profil
+} elseif ($path === '/profil') {
+    $controller = new UserController();
+    $data = $controller->showUser();
+//update user profil
+} elseif ($path === '/profil/update') {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $controller = new UserController();
+        $controller->updateProfil();
+    } else {
+        $controller = new UserController();
+        $data = $controller->showUpdate();
+    }
+}else {
     $data = ['title' => 'Erreur', 'content' => '404 - Page non trouvée'];
 }
 
