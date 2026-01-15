@@ -38,17 +38,17 @@ class UserController {
             }
 
             //recover the data
-            $username = $_POST['username'];
-            $email = $_POST['email'];
+            $username = trim($_POST['username']);
+            $email = trim($_POST['email']);
             $password = $_POST['password'];
-            $bio = $_POST['bio'];
+            $bio = trim($_POST['bio']);
 
             //create the user
             $user = new User();
-            $user->setUsername(htmlspecialchars($username));
-            $user->setEmail(htmlspecialchars($email));
+            $user->setUsername($username);
+            $user->setEmail($email);
             $user->setPassword($password);
-            $user->setBio(htmlspecialchars($bio));
+            $user->setBio($bio);
 
             //save the data
             $user->saveUser();
@@ -113,14 +113,6 @@ class UserController {
             exit;
         }
     }
-
-    // public function logoutUser() {
-    //     session_start();
-    //     session_destroy();
-        
-    //     header('Location: /');
-    //     exit;
-    // }
 
     public function showUser(){
         if (!isset($_SESSION['user'])) {

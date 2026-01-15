@@ -13,12 +13,12 @@
 
         <div>
             <label for="bio">Bio : </label>
-            <textarea name="bio" id="bio" class="form-control"></textarea>
+            <textarea name="bio" id="bio" class="form-control"><?= $user['bio'] ?></textarea>
         </div>
 
         <div>
             <label for="email">Email : </label>
-            <input type="email" name="email" id="email" class="form-control">
+            <input type="email" name="email" id="email" class="form-control" placeholder="<?= $user['email'] ?>">
         </div>
     
         <div>
