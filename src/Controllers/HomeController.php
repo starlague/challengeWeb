@@ -8,10 +8,14 @@ class HomeController {
 
     public function index() {
         $postController = new PostController();
-        $posts = $postController->listPosts();
         $commentController = new CommentController();
 
-        // Gestion POST pour créer un post
+        $posts = $postController->listPosts();
+
+        foreach ($posts as &$post) {
+            $post['comments'] = $commentController->getCommentsForPost($post['id']);
+        }
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user'])) {
             if (isset($_POST['title']) && isset($_POST['content'])) {
                 $title = $_POST['title'];
@@ -27,7 +31,6 @@ class HomeController {
 
                 $postController->createPost($idUser, $title, $content, $imageName);
 
-                // Redirection simple vers l'accueil (PAS DE #post-ID)
                 header('Location: /');
                 exit;
             }

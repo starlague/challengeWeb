@@ -2,18 +2,10 @@
   <div class="mx-auto post-form rounded mb-5">
       <form method="POST" enctype="multipart/form-data" class="p-4 d-flex flex-column gap-2">
           <h2>Créer un post</h2>
-          <div>
-              <input type="text" name="title" placeholder="Titre" class="form-control" required>
-          </div>
-          <div>
-              <textarea name="content" placeholder="Contenu" class="form-control" required></textarea>
-          </div>
-          <div>
-              <input type="file" name="image" accept="image/*" class="form-control">
-          </div>
-          <div class="mt-1">
-              <button type="submit" class="publish">Publier</button>
-          </div>
+          <input type="text" name="title" placeholder="Titre" class="form-control" required>
+          <textarea name="content" placeholder="Contenu" class="form-control" required></textarea>
+          <input type="file" name="image" accept="image/*" class="form-control">
+          <button type="submit" class="publish mt-1">Publier</button>
       </form>
   </div>
 <?php else: ?>
@@ -37,16 +29,11 @@
                     <p><?= nl2br(htmlspecialchars($post['content'])) ?></p>
                     <small>Par <strong><?= htmlspecialchars($post['username']) ?></strong></small>
 
-                    <!-- COMMENTAIRES -->
                     <div class="comments">
                         <h4>Commentaires :</h4>
 
-                        <?php 
-                            $comments = $commentController->getCommentsForPost($post['id']); 
-                        ?>
-                        
-                        <?php if (!empty($comments)): ?>
-                            <?php foreach ($comments as $comment): ?>
+                        <?php if (!empty($post['comments'])): ?>
+                            <?php foreach ($post['comments'] as $comment): ?>
                                 <div class="comment">
                                     <strong><?= htmlspecialchars($comment['username']) ?></strong> :
                                     <?= nl2br(htmlspecialchars($comment['content'])) ?>
@@ -71,8 +58,8 @@
     <?php else: ?>
         <p>Aucun post pour le moment.</p>
     <?php endif; ?>
+</div>
 
-<!-- SCRIPT AJAX -->
 <script>
 document.querySelectorAll('.comment-form').forEach(form => {
     form.addEventListener('submit', async e => {
@@ -96,10 +83,20 @@ document.querySelectorAll('.comment-form').forEach(form => {
 
         if (response.ok) {
             const data = await response.json();
-            const commentsDiv = form.closest('.comments');
+            // Créer un élément sûr
             const newComment = document.createElement('div');
             newComment.classList.add('comment');
-            newComment.innerHTML = `<strong>${data.username}</strong> : ${data.content}`;
+
+            const strong = document.createElement('strong');
+            strong.textContent = data.username;
+
+            const span = document.createElement('span');
+            span.textContent = " : " + data.content;
+
+            newComment.appendChild(strong);
+            newComment.appendChild(span);
+
+            const commentsDiv = form.closest('.comments');
             commentsDiv.insertBefore(newComment, form);
             textarea.value = '';
         } else {
@@ -108,4 +105,3 @@ document.querySelectorAll('.comment-form').forEach(form => {
     });
 });
 </script>
-
