@@ -1,5 +1,4 @@
-<?php 
-
+<?php
 session_start();
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -13,15 +12,13 @@ $path = $path === '' ? '/' : $path;
 
 $data = ['title' => 'Blog', 'content' => ''];
 
-//home
+// ROUTING
 if ($path === '/') {
     $controller = new HomeController();
     $data = $controller->index();
-//users list
 } elseif ($path === '/users') {
     $controller = new UserController();
     $data = $controller->listUsers();
-//registration
 } elseif ($path === '/register') {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $controller = new UserController();
@@ -30,7 +27,6 @@ if ($path === '/') {
         $controller = new UserController();
         $data = $controller->showRegister();
     }
-//login
 } elseif ($path === '/login') {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $controller = new UserController();
@@ -39,11 +35,10 @@ if ($path === '/') {
         $controller = new UserController();
         $data = $controller->showLogin();
     }
-//user profil
 } elseif ($path === '/profil') {
     $controller = new UserController();
     $data = $controller->showUser();
-}else {
+} else {
     $data = ['title' => 'Erreur', 'content' => '404 - Page non trouvée'];
 }
 

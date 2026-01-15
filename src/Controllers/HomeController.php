@@ -1,49 +1,43 @@
 <?php
-
 namespace App\Controllers;
 
-use App\Models\Post;
+use App\Controllers\PostController;
 
 class HomeController {
 
     public function index() {
+        $postController = new PostController();
+        $posts = $postController->listPosts();
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Gestion du formulaire POST pour créer un post
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user'])) {
+            $title = $_POST['title'];
+            $content = $_POST['content'];
+            $idUser = $_SESSION['user']['id'];
 
-            $image = null;
-
-            if (!empty($_FILES['image']['name'])) {
-
-                $image = time() . '_' . basename($_FILES['image']['name']);
-
-                $uploadDir = __DIR__ . '/../../public/assets/uploads/';
-                $destination = $uploadDir . $image;
-
-                if (!move_uploaded_file($_FILES['image']['tmp_name'], $destination)) {
-                    die("Erreur lors de l'upload de l'image !");
-                }
+            $imageName = null;
+            if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+                $imageName = uniqid() . '.' . $ext;
+                move_uploaded_file($_FILES['image']['tmp_name'], __DIR__ . '/../../public/assets/uploads/' . $imageName);
             }
 
-            Post::create(
-                1,
-                $_POST['title'],
-                $_POST['content'],
-                $image
-            );
+            $postController->createPost($idUser, $title, $content, $imageName);
 
+            // Rafraîchir la page pour afficher le nouveau post
             header('Location: /');
             exit;
         }
 
-        $posts = Post::getAll();
-
+        // Renvoie les données à la vue
         ob_start();
         require __DIR__ . '/../views/home/index.php';
         $content = ob_get_clean();
 
         return [
             'title' => 'Accueil',
-            'content' => $content
+            'content' => $content,
+            'posts' => $posts
         ];
     }
 }

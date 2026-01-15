@@ -8,7 +8,7 @@ class PostController {
     public function listPosts() {
         $pdo = Database::getInstance();
         $stmt = $pdo->query("
-            SELECT p.title, p.content, u.username
+            SELECT p.*, u.username 
             FROM post p
             JOIN users u ON p.idUser = u.id
             ORDER BY p.id DESC
@@ -16,16 +16,17 @@ class PostController {
         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 
-    public function createPost($idUser, $title, $content) {
+    public function createPost($idUser, $title, $content, $image = null) {
         $pdo = Database::getInstance();
         $stmt = $pdo->prepare("
-            INSERT INTO post (idUser, title, content)
-            VALUES (:idUser, :title, :content)
+            INSERT INTO post (idUser, title, content, image)
+            VALUES (:idUser, :title, :content, :image)
         ");
         $stmt->execute([
             ':idUser' => $idUser,
             ':title' => $title,
-            ':content' => $content
+            ':content' => $content,
+            ':image' => $image
         ]);
     }
 }
