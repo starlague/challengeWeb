@@ -17,17 +17,17 @@ $data = ['title' => 'Blog', 'content' => ''];
 // ROUTING
 // ========================
 
-// Accueil
+//home
 if ($path === '/') {
     $controller = new HomeController();
     $data = $controller->index();
 
-// Liste des utilisateurs
+//users list
 } elseif ($path === '/users') {
     $controller = new UserController();
     $data = $controller->listUsers();
 
-// Inscription
+//register
 } elseif ($path === '/register') {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $controller = new UserController();
@@ -37,7 +37,7 @@ if ($path === '/') {
         $data = $controller->showRegister();
     }
 
-// Connexion
+//login
 } elseif ($path === '/login') {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $controller = new UserController();
@@ -46,7 +46,7 @@ if ($path === '/') {
         $controller = new UserController();
         $data = $controller->showLogin();
     }
-// AJAX : création de commentaire
+// AJAX : creating comments
 } elseif ($path === '/ajax/comment' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_SESSION['user'])) {
         http_response_code(403);
@@ -90,9 +90,6 @@ if ($path === '/') {
     $data = ['title' => 'Erreur', 'content' => '404 - Page non trouvée'];
 }
 
-// ========================
-// Récupération des données pour le layout
-// ========================
 $title = $data['title'];
 $content = $data['content'];
 
