@@ -1,9 +1,9 @@
-# Site_Social
+# TalkSpace
 
 ![Version](https://img.shields.io/badge/version-1.0.0-blue) ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 ## 🪧 About
-**Site_Social** is a simple online social network that allows users to share posts, interact via likes and comments, and customize their profile.  
+**TalkSpace** is a simple online social network that allows users to share posts, interact via likes and comments, and customize their profile.  
 This project was developed as part of a school project called the **“Challenge Web”**, where the goal was to create a functional and interactive website.  
 The aim is to provide an intuitive and user-friendly platform to post and discover content.
 
@@ -27,10 +27,10 @@ Before installing and running the project, make sure you have:
    ```bash
    git clone https://github.com/starlague/challengeWeb.git
 
-   cd site_social
+   cd challengeWeb
 2. **Configure the database:**
 
-- Create a MySQL database, e.g., site_social_db
+- Create a MySQL database, e.g., blog
 
 - Import the database.sql file to create the initial tables, or create them manually
 
@@ -39,8 +39,11 @@ Before installing and running the project, make sure you have:
 3. **Run the local server:**
 
 - Place project files in your server’s web folder (e.g., htdocs for XAMPP)
+    ```bash
+    php -S localhost:8000 -t public
+    ```
 
-- Open the site in your browser at: http://localhost/site_social
+- Open the site in your browser at: http://localhost:8000
 
 ## 🛠️ Usage
 **User Management**
@@ -55,22 +58,7 @@ Before installing and running the project, make sure you have:
 
 - View posts from all users
 
-**Example Commands for Local Setup**
 
-1. **Open site in browser**
-    ```bash
-    http://localhost/site_social
-2. **Check database tables**
-    ```bash
-    mysql -u root -p
-    USE site_social_db;
-    SHOW TABLES;
-3. **Reset database (optional)**
-    ```bash
-    mysql -u root -p site_social_db < database.sql
-4. **Start PHP built-in server (alternative)**
-    ```bash
-    php -S localhost:8000
 ## 🤝 Contributing
 **How to Contribute**
 
