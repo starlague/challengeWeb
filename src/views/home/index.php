@@ -1,6 +1,3 @@
-
-
-
 <?php if (isset($_SESSION['user'])): ?>
   <div class="w-75 mx-auto post-form rounded mb-5">
       <form method="POST" enctype="multipart/form-data" class="p-4 d-flex flex-column gap-2">
@@ -25,61 +22,55 @@
 
 <div class="w-75 mx-auto rounded">
     <h2>Posts</h2>
+    <?php if (!empty($posts)): ?>
+        <div class="d-grid p-2 mx-auto gap-2" style="grid-template-columns: repeat(4, 1fr);">
+            <?php foreach ($posts as $post): ?>
+                <div class="post rounded" id="post-<?= $post['id'] ?>">
+                    <h3><?= htmlspecialchars($post['title']) ?></h3>
 
-<?php
-use App\Controllers\CommentController;
-$commentController = new CommentController();
-?>
-
-<?php if (!empty($posts)): ?>
-  <div class="d-grid p-2 mx-auto gap-2" id="post-<?= $post['id'] ?> style="grid-template-columns: repeat(4, 1fr);">
-        
-        <?php foreach ($posts as $post): ?>
-            <div class="post rounded">
-                <h3><?= htmlspecialchars($post['title']) ?></h3>
-
-                <?php if (!empty($post['image'])): ?>
-                    <div class="container-img">               
-                        <img src="/assets/uploads/<?= htmlspecialchars($post['image']) ?>" class="img-fluid rounded">
-                    </div>
-                <?php endif; ?>
-
-                <p><?= nl2br(htmlspecialchars($post['content'])) ?></p>
-                <small>Par <strong><?= htmlspecialchars($post['username']) ?></strong></small>
-            </div>
-        <?php endforeach; ?>
-    </div>
-
-            <!-- COMMENTAIRES -->
-            <div class="comments">
-                <h4>Commentaires :</h4>
-
-                <?php $comments = $commentController->getCommentsForPost($post['id']); ?>
-                <?php if (!empty($comments)): ?>
-                    <?php foreach ($comments as $comment): ?>
-                        <div class="comment">
-                            <strong><?= htmlspecialchars($comment['username']) ?></strong> :
-                            <?= nl2br(htmlspecialchars($comment['content'])) ?>
+                    <?php if (!empty($post['image'])): ?>
+                        <div class="container-img">
+                            <img src="/assets/uploads/<?= htmlspecialchars($post['image']) ?>" class="img-fluid rounded" alt="<?= htmlspecialchars($post['title']) ?>">
                         </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <p>Aucun commentaire pour le moment.</p>
-                <?php endif; ?>
+                    <?php endif; ?>
 
-                <?php if (isset($_SESSION['user'])): ?>
-                    <form class="comment-form" data-post-id="<?= $post['id'] ?>">
-                        <textarea name="comment_content" placeholder="Écrire un commentaire..." required></textarea><br>
-                        <button type="submit">Commenter</button>
-                    </form>
-                <?php else: ?>
-                    <p>Connectez-vous pour commenter.</p>
-                <?php endif; ?>
-            </div>
+                    <p><?= nl2br(htmlspecialchars($post['content'])) ?></p>
+                    <small>Par <strong><?= htmlspecialchars($post['username']) ?></strong></small>
+
+                    <!-- COMMENTAIRES -->
+                    <div class="comments">
+                        <h4>Commentaires :</h4>
+
+                        <?php 
+                            $comments = $commentController->getCommentsForPost($post['id']); 
+                        ?>
+                        
+                        <?php if (!empty($comments)): ?>
+                            <?php foreach ($comments as $comment): ?>
+                                <div class="comment">
+                                    <strong><?= htmlspecialchars($comment['username']) ?></strong> :
+                                    <?= nl2br(htmlspecialchars($comment['content'])) ?>
+                                </div>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <p>Aucun commentaire pour le moment.</p>
+                        <?php endif; ?>
+
+                        <?php if (isset($_SESSION['user'])): ?>
+                            <form class="comment-form" data-post-id="<?= $post['id'] ?>">
+                                <textarea name="comment_content" placeholder="Écrire un commentaire..." required></textarea><br>
+                                <button type="submit">Commenter</button>
+                            </form>
+                        <?php else: ?>
+                            <p>Connectez-vous pour commenter.</p>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            <?php endforeach; ?>
         </div>
-    <?php endforeach; ?>
-<?php else: ?>
-    <p>Aucun post pour le moment.</p>
-<?php endif; ?>
+    <?php else: ?>
+        <p>Aucun post pour le moment.</p>
+    <?php endif; ?>
 
 <!-- SCRIPT AJAX -->
 <script>

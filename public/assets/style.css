@@ -26,7 +26,10 @@
 .comment-form button {
     padding: 6px 12px;
     background-color: #ff69b4; /* rose */
-
+}
+.comment-form button:hover {
+    background-color: #8a2be2; /* violet */
+}
 header {
     background-color: black;
     color: white;
@@ -34,10 +37,6 @@ header {
     border-radius: 5px;
 }
 
-.comment-form button:hover {
-    background-color: #8a2be2; /* violet */
-}
-}
 .sticky-top {
     top: 10px;
 }
