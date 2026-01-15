@@ -40,7 +40,7 @@ body {
 }
 
 /* button and link style */
-.publish {
+.publish, .login, .submit {
     color: white;
     border: none;
     border-radius: 5px;
@@ -71,12 +71,8 @@ body {
 }
 
 .login {
-    background-color: #2563eb;
     border: 2px solid #2563eb;
-    color: white;
-    border-radius: 5px;
-    padding: 5px 10px;
-    transition: all ease 0.2s;
+    padding: 5px 10px;;
 }
 
 .publish:hover, .logout:hover, .login:hover, .signin:hover {
