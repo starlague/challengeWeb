@@ -14,6 +14,12 @@ class Post {
 
     public static function getAll() {
         $pdo = Database::getInstance();
-        return $pdo->query("SELECT * FROM post ORDER BY id DESC")->fetchAll(\PDO::FETCH_ASSOC);
+        $stmt = $pdo->query("
+            SELECT p.*, u.username 
+            FROM post p
+            JOIN users u ON p.idUser = u.id
+            ORDER BY p.id DESC
+        ");
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 }

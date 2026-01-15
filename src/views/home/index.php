@@ -18,5 +18,6 @@
         <?php endif; ?>
 
         <p><?= nl2br(htmlspecialchars($post['content'])) ?></p>
+        <small>Par <?= htmlspecialchars($post['username']) ?></small>
     </div>
 <?php endforeach; ?>
