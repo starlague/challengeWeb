@@ -2,10 +2,18 @@
   <div class="mx-auto post-form rounded mb-5">
       <form method="POST" enctype="multipart/form-data" class="p-4 d-flex flex-column gap-2">
           <h2>Créer un post</h2>
-          <input type="text" name="title" placeholder="Titre" class="form-control" required>
-          <textarea name="content" placeholder="Contenu" class="form-control" required></textarea>
-          <input type="file" name="image" accept="image/*" class="form-control">
-          <button type="submit" class="publish mt-1">Publier</button>
+          <div>
+              <input type="text" name="title" placeholder="Titre" class="form-control" required>
+          </div>
+          <div>
+              <textarea name="content" placeholder="Contenu" class="form-control" required></textarea>
+          </div>
+          <div>
+              <input type="file" name="image" accept="image/*" class="form-control">
+          </div>
+          <div>
+              <button type="submit" class="publish mt-1">Publier</button>
+          </div>
       </form>
   </div>
 <?php else: ?>
