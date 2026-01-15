@@ -1,5 +1,5 @@
 <?php if (!empty($_SESSION['error'])): ?>
-    <div style="color: red; padding: 10px; background: #ffe0e0; border-radius: 5px; margin-bottom: 20px;">
+    <div class="error ms-3 me-3">
         ❌ <?= htmlspecialchars($_SESSION['error']) ?>
     </div>
     <?php unset($_SESSION['error']); ?>

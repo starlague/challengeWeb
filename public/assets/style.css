@@ -116,3 +116,12 @@ body {
 .publish:hover, .logout:hover, .login:hover, .signin:hover {
     transform: scale(1.05);
 }
+
+/* error style */
+.error {
+    color: red; 
+    padding: 10px; 
+    background: #ffe0e0; 
+    border-radius: 5px; 
+    margin-bottom: 20px;
+}
