@@ -17,13 +17,10 @@
       </form>
   </div>
 <?php else: ?>
-    <p>Connectez-vous pour publier un post.</p>
+    <div class="ms-5">
+        <p>Connectez-vous pour publier un post.</p>
+    </div>
 <?php endif; ?>
-
-
-
-
-
 
 <div class="mx-auto rounded posts-container">
     <?php if (!empty($posts)): ?>
