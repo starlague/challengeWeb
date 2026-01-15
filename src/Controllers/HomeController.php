@@ -8,20 +8,14 @@ class HomeController {
 
     public function index() {
         $postController = new PostController();
-        $commentController = new CommentController();
-
-        $posts = $postController->listPosts();
-
-        foreach ($posts as &$post) {
-            $post['comments'] = $commentController->getCommentsForPost($post['id']);
-        }
+        $posts = $postController->listPostsWithComments();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user'])) {
-            if (isset($_POST['title']) && isset($_POST['content'])) {
-                $title = $_POST['title'];
-                $content = $_POST['content'];
-                $idUser = $_SESSION['user']['id'];
+            $title = $_POST['title'] ?? '';
+            $content = $_POST['content'] ?? '';
+            $idUser = $_SESSION['user']['id'];
 
+            if ($title && $content) {
                 $imageName = null;
                 if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                     $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
@@ -30,7 +24,6 @@ class HomeController {
                 }
 
                 $postController->createPost($idUser, $title, $content, $imageName);
-
                 header('Location: /');
                 exit;
             }
