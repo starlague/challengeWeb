@@ -39,6 +39,13 @@ if ($path === '/') {
         $controller = new UserController();
         $data = $controller->showLogin();
     }
+//logout
+} elseif ($path === '/logout') {
+    session_start();
+    session_destroy();
+        
+    header('Location: /');
+    exit;
 //user profil
 } elseif ($path === '/profil') {
     $controller = new UserController();
