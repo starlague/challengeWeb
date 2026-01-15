@@ -78,7 +78,7 @@ body {
 }
 
 /* button and link style */
-.publish, .login, .submit {
+.publish, .login, .submit, .edit {
     color: white;
     border: none;
     border-radius: 5px;
@@ -87,7 +87,7 @@ body {
     transition: all ease 0.2s;
 }
 
-.link, .signin, .login, .logout {
+.link, .signin, .login, .logout, .edit {
     text-decoration: none;
 }
 
