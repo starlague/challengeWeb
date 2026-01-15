@@ -1,8 +1,42 @@
+.comments {
+    margin-top: 15px;
+    padding-left: 15px;
+    border-left: 3px solid #8a2be2; /* violet */
+}
+
+.comment {
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.comment:last-child {
+    border-bottom: none;
+}
+
+.comment-form textarea {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.comment-form button {
+    padding: 6px 12px;
+    background-color: #ff69b4; /* rose */
 
 header {
     background-color: black;
     color: white;
+    border: none;
     border-radius: 5px;
+}
+
+.comment-form button:hover {
+    background-color: #8a2be2; /* violet */
+}
 }
 .sticky-top {
     top: 10px;

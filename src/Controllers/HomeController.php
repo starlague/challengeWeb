@@ -1,41 +1,37 @@
 <?php
-
 namespace App\Controllers;
 
-use App\Models\Post;
+use App\Controllers\PostController;
+use App\Controllers\CommentController;
 
 class HomeController {
 
     public function index() {
+        $postController = new PostController();
+        $posts = $postController->listPosts();
+        $commentController = new CommentController();
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // Gestion POST pour créer un post
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_SESSION['user'])) {
+            if (isset($_POST['title']) && isset($_POST['content'])) {
+                $title = $_POST['title'];
+                $content = $_POST['content'];
+                $idUser = $_SESSION['user']['id'];
 
-            $image = null;
-
-            if (!empty($_FILES['image']['name'])) {
-
-                $image = time() . '_' . basename($_FILES['image']['name']);
-
-                $uploadDir = __DIR__ . '/../../public/assets/uploads/';
-                $destination = $uploadDir . $image;
-
-                if (!move_uploaded_file($_FILES['image']['tmp_name'], $destination)) {
-                    die("Erreur lors de l'upload de l'image !");
+                $imageName = null;
+                if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
+                    $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+                    $imageName = uniqid() . '.' . $ext;
+                    move_uploaded_file($_FILES['image']['tmp_name'], __DIR__ . '/../../public/assets/uploads/' . $imageName);
                 }
+
+                $postController->createPost($idUser, $title, $content, $imageName);
+
+                // Redirection simple vers l'accueil (PAS DE #post-ID)
+                header('Location: /');
+                exit;
             }
-
-            Post::create(
-                1,
-                $_POST['title'],
-                $_POST['content'],
-                $image
-            );
-
-            header('Location: /');
-            exit;
         }
-
-        $posts = Post::getAll();
 
         ob_start();
         require __DIR__ . '/../views/home/index.php';
@@ -43,7 +39,8 @@ class HomeController {
 
         return [
             'title' => 'Accueil',
-            'content' => $content
+            'content' => $content,
+            'posts' => $posts
         ];
     }
 }
