@@ -37,19 +37,22 @@
                     <p><?= nl2br(htmlspecialchars($post['content'])) ?></p>
                     <small>Par <strong><?= htmlspecialchars($post['username']) ?></strong></small>
 
+                    <!-- COMMENTAIRES -->
                     <div class="comments">
                         <h4>Commentaires :</h4>
 
-                        <?php if (!empty($post['comments'])): ?>
-                            <?php foreach ($post['comments'] as $comment): ?>
-                                <div class="comment">
-                                    <strong><?= htmlspecialchars($comment['username']) ?></strong> :
-                                    <?= nl2br(htmlspecialchars($comment['content'])) ?>
-                                </div>
-                            <?php endforeach; ?>
-                        <?php else: ?>
-                            <p>Aucun commentaire pour le moment.</p>
-                        <?php endif; ?>
+                        <div class="comments-list">
+                            <?php if (!empty($post['comments'])): ?>
+                                <?php foreach ($post['comments'] as $comment): ?>
+                                    <div class="comment">
+                                        <strong><?= htmlspecialchars($comment['username']) ?></strong> :
+                                        <?= nl2br(htmlspecialchars($comment['content'])) ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <p>Aucun commentaire pour le moment.</p>
+                            <?php endif; ?>
+                        </div>
 
                         <?php if (isset($_SESSION['user'])): ?>
                             <form class="comment-form" data-post-id="<?= $post['id'] ?>">
@@ -68,6 +71,7 @@
     <?php endif; ?>
 </div>
 
+<!-- SCRIPT AJAX -->
 <script>
 document.querySelectorAll('.comment-form').forEach(form => {
     form.addEventListener('submit', async e => {
@@ -75,7 +79,7 @@ document.querySelectorAll('.comment-form').forEach(form => {
 
         const postId = form.dataset.postId;
         const textarea = form.querySelector('textarea');
-        const content = textarea.value;
+        const content = textarea.value.trim();
 
         if (!content) return;
 
@@ -83,15 +87,26 @@ document.querySelectorAll('.comment-form').forEach(form => {
         formData.append('comment_post_id', postId);
         formData.append('comment_content', content);
 
-        const response = await fetch('/ajax/comment', {
-            method: 'POST',
-            body: formData,
-            credentials: 'same-origin'
-        });
+        try {
+            const response = await fetch('/ajax/comment', {
+                method: 'POST',
+                body: formData,
+                credentials: 'same-origin'
+            });
 
-        if (response.ok) {
+            if (!response.ok) throw new Error('Erreur lors de l\'envoi du commentaire');
+
             const data = await response.json();
-            // Créer un élément sûr
+
+            const commentsList = form.closest('.comments').querySelector('.comments-list');
+
+            // Supprimer le message "Aucun commentaire pour le moment"
+            const noCommentMsg = commentsList.querySelector('p');
+            if (noCommentMsg && noCommentMsg.textContent.includes("Aucun commentaire")) {
+                noCommentMsg.remove();
+            }
+
+            // Créer un nouveau commentaire
             const newComment = document.createElement('div');
             newComment.classList.add('comment');
 
@@ -104,11 +119,10 @@ document.querySelectorAll('.comment-form').forEach(form => {
             newComment.appendChild(strong);
             newComment.appendChild(span);
 
-            const commentsDiv = form.closest('.comments');
-            commentsDiv.insertBefore(newComment, form);
+            commentsList.appendChild(newComment);
             textarea.value = '';
-        } else {
-            alert('Erreur lors de l\'envoi du commentaire.');
+        } catch (error) {
+            alert(error.message);
         }
     });
 });
