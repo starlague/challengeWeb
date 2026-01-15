@@ -1,5 +1,50 @@
+
 header {
     background-color: black;
     color: white;
     border-radius: 5px;
+}
+body {
+    background-color: #f5f6fa;
+}
+
+
+/* home style */
+.post-form {
+    background-color: white;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+
+.post {
+    border:1px solid #f5f6fa; 
+    padding:10px;
+    margin-bottom:15px;
+    background-color: white;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+}
+.container-img {
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center
+}
+.container-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* button and link style */
+.publish {
+    color: white;
+    border: none;
+    border-radius: 5px;
+    background-color: #2563eb;
+    padding: 5px 10px;
+    transition: all ease 0.2s;
+}
+.publish:hover {
+    transform: scale(1.05);
 }
