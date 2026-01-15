@@ -1,5 +1,5 @@
 <?php if (isset($_SESSION['user'])): ?>
-  <div class="w-75 mx-auto post-form rounded mb-5">
+  <div class="mx-auto post-form rounded mb-5">
       <form method="POST" enctype="multipart/form-data" class="p-4 d-flex flex-column gap-2">
           <h2>Créer un post</h2>
           <div>
@@ -20,7 +20,7 @@
     <p>Connectez-vous pour publier un post.</p>
 <?php endif; ?>
 
-<div class="w-75 mx-auto rounded">
+<div class="mx-auto rounded posts-container">
     <h2>Posts</h2>
     <?php if (!empty($posts)): ?>
         <div class="d-grid p-2 mx-auto gap-2" style="grid-template-columns: repeat(4, 1fr);">

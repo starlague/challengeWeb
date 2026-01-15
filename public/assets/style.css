@@ -25,10 +25,10 @@
 
 .comment-form button {
     padding: 6px 12px;
-    background-color: #ff69b4; /* rose */
+    background-color: #ff69b4;
 }
 .comment-form button:hover {
-    background-color: #8a2be2; /* violet */
+    background-color: #8a2be2;
 }
 header {
     background-color: black;
@@ -49,6 +49,11 @@ body {
 .post-form {
     background-color: white;
     box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    width: 90%;
+}
+
+.posts-container {
+    width: 90%;
 }
 
 .post {
