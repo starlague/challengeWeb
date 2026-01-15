@@ -16,36 +16,41 @@ class RegisterController {
         ];
     }
 
-    public function createUser() {
+public function createUser() {
         try {
+            //check the POST method
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                throw new \Exception("Méthode non autorisée");
+                throw new \Exception('Méthode non autorisée');
             }
 
-            $username = htmlspecialchars($_POST['username']);
-            $email = filter_var($_POST['email'], FILTER_VALIDATE_EMAIL);
+            //recover the data
+            $username = trim($_POST['username']);
+            $email = trim($_POST['email']);
             $password = $_POST['password'];
-            $bio = htmlspecialchars($_POST['bio']);
+            $bio = trim($_POST['bio']);
 
+            //create the user
             $user = new User();
             $user->setUsername($username);
             $user->setEmail($email);
             $user->setPassword($password);
             $user->setBio($bio);
 
+            //save the data
             $user->saveUser();
 
-            $_SESSION['user'] = [
-                'id' => $user->getId(),
-                'username' => $user->getUsername(),
-                'email' => $user->getEmail(),
-                'bio' => $user->getBio(),
+            $_SESSION["user"] = [
+                "id" => $user->getId(),
+                "username"=> $user->getUsername(),
+                "email"=> $user->getEmail(),
+                "bio"=> $user->getBio(),
             ];
 
-            header('Location: /');
+            header('Location: /users');
             exit;
 
         } catch (\Exception $e) {
+            //display the message and redirect
             $_SESSION['error'] = $e->getMessage();
             header('Location: /register');
             exit;
