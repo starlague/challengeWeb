@@ -20,19 +20,19 @@
   - [+] Pas d'erreurs SQL visibles
 
 ### 2. Tests Interface
-- [+] Design général
-  - [+] Cohérence visuelle
+- [++] Design général
+  - [++] Cohérence visuelle
   - [+] Mise en page structurée
   - [+] Éléments de design originaux
-- [+] Expérience utilisateur
+- [++] Expérience utilisateur
   - [+] Messages clairs
   - [+] Actions évidentes
-  - [=] Temps de réponse acceptable
+  - [+] Temps de réponse acceptable
 
 ### 3. Tests Architecture
 - [+] Structure du projet
-  - [+] Organisation MVC
-  - [+] Séparation des responsabilités
+  - [=] Organisation MVC
+  - [=] Séparation des responsabilités
   - [+] Nommage cohérent des dossiers/fichiers
 - [+] Organisation
   - [+] Pas de fichiers inutiles
@@ -43,30 +43,30 @@
 - [--] README
   - [--] Description du projet
   - [-] Instructions d'installation
-  - [--] Configuration requise
+  - [-] Configuration requise
   - [-] Commandes importantes
-- [--] Guide utilisateur
+- [-] Guide utilisateur
   - [-] Fonctionnalités expliquées
   - [=] Captures d'écran si nécessaire
 
 ### 5. Code
-- [+] Qualité des commentaires
-  - [+] Pertinence et cohérence
-  - [=] Pas de code mort et/ou commenté
+- [=] Qualité des commentaires
+  - [=] Pertinence et cohérence
+  - [+] Pas de code mort et/ou commenté
 - [+] Style
   - [+] Indentation cohérente
   - [+] Format PSR respecté
   - [+] Lisibilité
 
 ### 6. Gestion de Projet
-- [=] Git
-  - [-] Commits réguliers
+- [+] Git
+  - [+] Commits réguliers
   - [+] Messages descriptifs
-  - [+] Branches utilisées
-- [=] Organisation
-  - [=] Planification visible
-  - [--] Répartition des tâches
-  - [=] Respect des délais
+  - [++] Branches utilisées
+- [+] Organisation
+  - [+] Planification visible
+  - [+] Répartition des tâches
+  - [+] Respect des délais
 
 ### 7. Qualité Code
 - [+] Bonnes pratiques
@@ -76,7 +76,7 @@
 - [+] Maintenabilité
   - [+] Code modulaire
   - [+] Variables bien nommées
-  - [+] Fonctions courtes
+  - [=] Fonctions courtes
 
 ## Notation
 
@@ -89,8 +89,7 @@ Pour chaque section:
 
 ## Commentaires Généraux
 - Points forts :
-Interface très soignée et moderne
-Animations et transitions fluides
+> L’interface est très soignée et moderne, avec des animations et des transitions fluides. Le design du site est à la fois esthétique et fonctionnel : simple, efficace, stylisé et entièrement responsive.
 - Axes d'amélioration :
-Ajouter des confirmations de suppression côté frontend
+>Ajouter des confirmations de suppression côté frontend, finaliser les fonctionnalités manquantes et intégrer un logo.
 - Remarques particulières :
