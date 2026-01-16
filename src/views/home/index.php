@@ -85,6 +85,7 @@
                         <?php if (!empty($post['comments'])): ?>
                             <?php foreach ($post['comments'] as $commentIndex => $comment): ?>
                                 <div class="comment"
+                                     id="comment-<?= $comment['id'] ?>"
                                      x-data="{ show: false }"
                                      x-init="setTimeout(() => show = true, <?= $commentIndex * 50 ?>)"
                                      x-show="show"
@@ -93,6 +94,15 @@
                                      x-transition:enter-end="opacity-100 translate-x-0">
                                     <strong><?= htmlspecialchars($comment['username']) ?></strong> :
                                     <?= nl2br(htmlspecialchars($comment['content'])) ?>
+
+                                    <?php if (isset($_SESSION['user']) && $_SESSION['user']['id'] == $comment['idUser']): ?>
+                                        <button class="delete-comment btn btn-sm btn-danger ms-2"
+                                                data-comment-id="<?= $comment['id'] ?>"
+                                                x-data
+                                                x-on:mouseenter="$el.style.transform = 'scale(1.05)'"
+                                                x-on:mouseleave="$el.style.transform = 'scale(1)'"
+                                                style="transition: transform 0.2s;">Supprimer</button>
+                                    <?php endif; ?>
                                 </div>
                             <?php endforeach; ?>
                         <?php else: ?>
@@ -149,71 +159,43 @@ document.querySelectorAll('.comment-form').forEach(form => {
         try {
             const response = await fetch('/ajax/comment', { method: 'POST', body: formData, credentials: 'same-origin' });
             const text = await response.text();
-            console.log(text);
             const data = JSON.parse(text);
 
             const commentsList = form.closest('.comments').querySelector('.comments-list');
-            
-            // Remove "no comments" message if it exists
             const noCommentMsg = commentsList.querySelector('p');
-            if (noCommentMsg && noCommentMsg.textContent.includes('Aucun commentaire')) {
-                noCommentMsg.remove();
-            }
+            if (noCommentMsg && noCommentMsg.textContent.includes('Aucun commentaire')) noCommentMsg.remove();
 
-            // Get Alpine.js data and add to array
             const alpineData = Alpine.$data(commentsList);
-            if (alpineData && alpineData.comments) {
-                // Add new comment to Alpine.js data
-                alpineData.comments.push({
-                    username: data.username,
-                    content: data.content
-                });
-            }
+            if (alpineData && alpineData.comments) alpineData.comments.push({ username: data.username, content: data.content });
 
-            // Create and append the new comment element with Alpine.js animation
             const newComment = document.createElement('div');
             newComment.classList.add('comment');
-            
-            // Set Alpine.js attributes for animation
             newComment.setAttribute('x-data', '{ show: false }');
             newComment.setAttribute('x-init', 'setTimeout(() => show = true, 0)');
             newComment.setAttribute('x-show', 'show');
             newComment.setAttribute('x-transition:enter', 'transition ease-out duration-300');
             newComment.setAttribute('x-transition:enter-start', 'opacity-0 translate-x-4');
             newComment.setAttribute('x-transition:enter-end', 'opacity-100 translate-x-0');
-            
-            // Set content with proper escaping
+
             const username = document.createElement('strong');
             username.textContent = data.username;
             newComment.appendChild(username);
             newComment.appendChild(document.createTextNode(' : '));
-            
-            // Add content with line breaks
             const contentSpan = document.createElement('span');
             contentSpan.innerHTML = data.content.replace(/\n/g, '<br>');
             newComment.appendChild(contentSpan);
-            
-            // Append to comments list
+
             commentsList.appendChild(newComment);
-            
-            // Initialize Alpine.js on the new element
             Alpine.initTree(newComment);
 
-            // Clear textarea
             textarea.value = '';
-            
-            // Reset submitting state
             const alpineForm = Alpine.$data(form);
-            if (alpineForm) {
-                alpineForm.submitting = false;
-            }
+            if (alpineForm) alpineForm.submitting = false;
         } catch (error) {
             alert('Erreur serveur. Voir console.');
             console.error(error);
             const alpineForm = Alpine.$data(form);
-            if (alpineForm) {
-                alpineForm.submitting = false;
-            }
+            if (alpineForm) alpineForm.submitting = false;
         }
     });
 });
@@ -224,46 +206,49 @@ document.querySelectorAll('.delete-post').forEach(button => {
 
         const postId = button.dataset.postId;
         const postDiv = document.getElementById('post-' + postId);
-        
-        // Get Alpine.js data and set deleting to true
         const alpineData = Alpine.$data(postDiv);
-        if (alpineData) {
-            alpineData.deleting = true;
-            // Wait for animation to complete
-            await new Promise(resolve => setTimeout(resolve, 300));
-        }
+        if (alpineData) alpineData.deleting = true;
+        await new Promise(resolve => setTimeout(resolve, 300));
 
         const formData = new FormData();
         formData.append('post_id', postId);
 
         try {
             const response = await fetch('/post/delete', { method: 'POST', body: formData, credentials: 'same-origin' });
-            const text = await response.text();
-            console.log(text);
-            const data = JSON.parse(text);
+            const data = await response.json();
 
-            if (data.success) {
-                if (postDiv) {
-                    if (alpineData) {
-                        alpineData.show = false;
-                        await new Promise(resolve => setTimeout(resolve, 300));
-                    }
-                    postDiv.remove();
-                }
-            } else {
-                alert(data.error || 'Erreur lors de la suppression.');
-                if (alpineData) {
-                    alpineData.deleting = false;
-                }
-            }
+            if (data.success && postDiv) postDiv.remove();
+            else if (alpineData) alpineData.deleting = false;
         } catch (error) {
-            alert('Erreur serveur. Voir console.');
             console.error(error);
-            if (alpineData) {
-                alpineData.deleting = false;
-            }
+            if (alpineData) alpineData.deleting = false;
+        }
+    });
+});
+
+document.querySelectorAll('.delete-comment').forEach(button => {
+    button.addEventListener('click', async () => {
+        if (!confirm("Voulez-vous vraiment supprimer ce commentaire ?")) return;
+
+        const commentId = button.dataset.commentId;
+        const commentDiv = document.getElementById('comment-' + commentId);
+        const alpineData = Alpine.$data(commentDiv);
+        if (alpineData) alpineData.show = false;
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        const formData = new FormData();
+        formData.append('comment_id', commentId);
+
+        try {
+            const response = await fetch('/ajax/comment/delete', { method: 'POST', body: formData, credentials: 'same-origin' });
+            const data = await response.json();
+
+            if (data.success && commentDiv) commentDiv.remove();
+            else if (alpineData) alpineData.show = true;
+        } catch (error) {
+            console.error(error);
+            if (alpineData) alpineData.show = true;
         }
     });
 });
 </script>
-

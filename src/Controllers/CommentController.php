@@ -12,4 +12,8 @@ class CommentController {
     public function getCommentsForPost($idPost) {
         return Comment::getByPost($idPost);
     }
+
+    public function deleteComment($commentId, $userId) {
+        Comment::deleteByIdAndUser($commentId, $userId);
+    }
 }

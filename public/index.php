@@ -87,7 +87,34 @@ if ($path === '/') {
         'content' => htmlspecialchars($content)
     ]);
     exit;
-// Post delete
+// Comment delete
+
+} elseif ($path === '/ajax/comment/delete' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_SESSION['user'])) {
+        http_response_code(403);
+        echo json_encode(['error' => 'Non connecté']);
+        exit;
+    }
+
+    $commentId = $_POST['comment_id'] ?? null;
+    $userId = $_SESSION['user']['id'];
+
+    if (!$commentId) {
+        http_response_code(400);
+        echo json_encode(['error' => 'ID du commentaire manquant']);
+        exit;
+    }
+
+    try {
+        $commentController = new CommentController();
+        $commentController->deleteComment($commentId, $userId);
+        echo json_encode(['success' => true]);
+    } catch (\Exception $e) {
+        http_response_code(400);
+        echo json_encode(['error' => $e->getMessage()]);
+    }
+    exit;
+
 } elseif ($path === '/post/delete' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_SESSION['user'])) {
         http_response_code(403);
@@ -107,14 +134,12 @@ if ($path === '/') {
     try {
         $postController = new PostController();
         $postController->deletePost($postId, $userId);
-
         echo json_encode(['success' => true]);
-        exit;
     } catch (\Exception $e) {
         http_response_code(400);
         echo json_encode(['error' => $e->getMessage()]);
-        exit;
     }
+    exit;
 
 } else {
     $data = ['title' => 'Erreur', 'content' => '404 - Page non trouvée'];
@@ -122,5 +147,4 @@ if ($path === '/') {
 
 $title = $data['title'];
 $content = $data['content'];
-
 require_once __DIR__ . '/../templates/layout.php';
