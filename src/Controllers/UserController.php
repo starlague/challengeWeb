@@ -130,4 +130,17 @@ class UserController {
             exit;
         }
     }
+
+    public function deleteUser() {
+        $user = new User;
+
+        $userId = $_SESSION['user']['id'];
+
+        $user->delete($userId);
+
+        session_destroy();
+
+        header('Location: /');
+        exit;
+    }
 }    

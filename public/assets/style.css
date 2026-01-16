@@ -46,7 +46,7 @@ body {
 .comments {
     margin-top: 15px;
     padding-left: 15px;
-    border-left: 3px solid #8a2be2;
+    /* border-left: 3px solid #8a2be2; */
 }
 
 .comment {
@@ -70,6 +70,7 @@ body {
 
 .comment-form button {
     padding: 6px 12px;
+    border-radius: 5px;
     background-color: #ff69b4;
 }
 .comment-form button:hover {
@@ -86,11 +87,11 @@ body {
     transition: all ease 0.2s;
 }
 
-.link, .signin, .login, .logout, .edit {
+.link, .signin, .login, .logout, .edit, .delete {
     text-decoration: none;
 }
 
-.logout {
+.logout, .delete {
     background-color: red;
     color: white;
     border-radius: 5px;
