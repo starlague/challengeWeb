@@ -21,11 +21,6 @@ $data = ['title' => 'Blog', 'content' => ''];
 if ($path === '/') {
     $controller = new HomeController();
     $data = $controller->index();
-
-} elseif ($path === '/users') {
-    $controller = new UserController();
-    $data = $controller->listUsers();
-
 // Regstration
 } elseif ($path === '/register') {
     $controller = new RegisterController();
