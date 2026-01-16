@@ -6,14 +6,12 @@ use PDO;
 
 class Comment {
 
-    // Create a comment
     public static function create($idPost, $idUser, $content) {
         $pdo = Database::getInstance();
         $stmt = $pdo->prepare("INSERT INTO `comment` (idPost, idUser, content) VALUES (?, ?, ?)");
         $stmt->execute([$idPost, $idUser, $content]);
     }
 
-    // Get comments for a post (sorted by id)
     public static function getByPost($idPost) {
         $pdo = Database::getInstance();
         $stmt = $pdo->prepare("
@@ -25,5 +23,11 @@ class Comment {
         ");
         $stmt->execute([$idPost]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function deleteByIdAndUser($idComment, $idUser) {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("DELETE FROM comment WHERE id = ? AND idUser = ?");
+        $stmt->execute([$idComment, $idUser]);
     }
 }
