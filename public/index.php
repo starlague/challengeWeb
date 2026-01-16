@@ -16,15 +16,15 @@ $path = $path === '' ? '/' : $path;
 
 $data = ['title' => 'Blog', 'content' => ''];
 
-
+// Home
 if ($path === '/') {
     $controller = new HomeController();
     $data = $controller->index();
-
+// User list
 } elseif ($path === '/users') {
     $controller = new UserController();
     $data = $controller->listUsers();
-
+// Regstration
 } elseif ($path === '/register') {
     $controller = new RegisterController();
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -32,7 +32,7 @@ if ($path === '/') {
     } else {
         $data = $controller->showRegister();
     }
-
+// Login
 } elseif ($path === '/login') {
     $controller = new LoginController();
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -40,16 +40,16 @@ if ($path === '/') {
     } else {
         $data = $controller->showLogin();
     }
-
+// Logout
 } elseif ($path === '/logout') {
     session_destroy();
     header('Location: /');
     exit;
-
+// User profile
 } elseif ($path === '/profil') {
     $controller = new UserController();
     $data = $controller->showUser();
-
+// User profile edit
 } elseif ($path === '/profil/update') {
     $controller = new UserController();
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -57,7 +57,11 @@ if ($path === '/') {
     } else {
         $data = $controller->showUpdate();
     }
-
+// Delete user
+} elseif ($path === '/user/delete') {
+    $controller = new UserController();
+    $data = $controller->deleteUser();
+// Comments section
 } elseif ($path === '/ajax/comment' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_SESSION['user'])) {
         http_response_code(403);
@@ -83,7 +87,7 @@ if ($path === '/') {
         'content' => htmlspecialchars($content)
     ]);
     exit;
-
+// Post delete
 } elseif ($path === '/post/delete' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_SESSION['user'])) {
         http_response_code(403);

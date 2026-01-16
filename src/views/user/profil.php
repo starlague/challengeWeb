@@ -39,13 +39,19 @@
             <strong>Email :</strong><?= htmlspecialchars($user['email']) ?>
         </div>
     </div>
-    <div>
+    <div class="d-flex justify-content-center gap-3">
         <a href="/profil/update" 
            class="edit"
            x-data
            x-on:mouseenter="$el.style.transform = 'scale(1.1)'"
            x-on:mouseleave="$el.style.transform = 'scale(1)'"
-           style="transition: transform 0.2s;">Modifier </a>
+           style="transition: transform 0.2s;">Modifier</a>
+        <a href="/user/delete" 
+           class="delete"
+           x-data
+           x-on:mouseenter="$el.style.transform = 'scale(1.1)'"
+           x-on:mouseleave="$el.style.transform = 'scale(1)'"
+           style="transition: transform 0.2s;">Supprimer</a>
     </div>
 </div>
 
