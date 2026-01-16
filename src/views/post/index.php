@@ -1,7 +1,9 @@
 <h2 class="text-center">Vos posts</h2>
 <div class="w-50 mx-auto">
     <?php if (empty($posts)) : ?>
-        <p>Vous n'avez encore publié aucun post.</p>
+        <div class="text-center">
+            <p>Vous n'avez encore publié aucun post.</p>
+        </div>        
     <?php else : ?>
         <?php foreach ($posts as $index => $post) : ?>
             <div class="post rounded">
@@ -18,14 +20,6 @@
                     </div>
                 <?php endif; ?>
                 <p><?= nl2br(htmlspecialchars($post['content'])) ?></p>
-                <?php if (isset($_SESSION['user']) && $_SESSION['user']['id'] == $post['idUser']): ?>
-                    <button class="delete-post btn btn-sm btn-danger mt-2" 
-                        data-post-id="<?= $post['id'] ?>"
-                        x-data
-                        x-on:mouseenter="$el.style.transform = 'scale(1.1)'"
-                        x-on:mouseleave="$el.style.transform = 'scale(1)'"
-                        style="transition: transform 0.2s;">Supprimer</button>
-                <?php endif; ?>
             </div>
         <?php endforeach; ?>
     <?php endif; ?>
