@@ -10,21 +10,22 @@ use App\Controllers\PostController;
 session_start();
 require_once __DIR__ . '/../vendor/autoload.php';
 
+// Récupération du path
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$path = str_replace('/public', '', $path);
+$path = str_replace('/public', '', $path); // <-- corrigé
 $path = $path === '' ? '/' : $path;
 
 $data = ['title' => 'Blog', 'content' => ''];
 
-// Home
+// --- ROUTES ---
 if ($path === '/') {
     $controller = new HomeController();
     $data = $controller->index();
-// User list
+
 } elseif ($path === '/users') {
     $controller = new UserController();
     $data = $controller->listUsers();
-// Regstration
+
 } elseif ($path === '/register') {
     $controller = new RegisterController();
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -32,7 +33,7 @@ if ($path === '/') {
     } else {
         $data = $controller->showRegister();
     }
-// Login
+
 } elseif ($path === '/login') {
     $controller = new LoginController();
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -40,16 +41,16 @@ if ($path === '/') {
     } else {
         $data = $controller->showLogin();
     }
-// Logout
+
 } elseif ($path === '/logout') {
     session_destroy();
     header('Location: /');
     exit;
-// User profile
+
 } elseif ($path === '/profil') {
     $controller = new UserController();
     $data = $controller->showUser();
-// User profile edit
+
 } elseif ($path === '/profil/update') {
     $controller = new UserController();
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -57,11 +58,7 @@ if ($path === '/') {
     } else {
         $data = $controller->showUpdate();
     }
-// Delete user
-} elseif ($path === '/user/delete') {
-    $controller = new UserController();
-    $data = $controller->deleteUser();
-// Comments section
+
 } elseif ($path === '/ajax/comment' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_SESSION['user'])) {
         http_response_code(403);
@@ -80,16 +77,15 @@ if ($path === '/') {
         exit;
     }
 
-    $result = $commentController->createComment($idPost, $idUser, $content);
+    $commentController->createComment($idPost, $idUser, $content);
 
     echo json_encode([
-        'id' => $result['id'],
         'username' => $_SESSION['user']['username'],
         'content' => htmlspecialchars($content),
-        'isAuthor' => $result['isAuthor']
+        'id' => time(), // remplacer par l'id réel si récupéré
+        'isAuthor' => true
     ]);
     exit;
-// Comment delete
 
 } elseif ($path === '/ajax/comment/delete' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_SESSION['user'])) {
@@ -111,12 +107,11 @@ if ($path === '/') {
         $commentController = new CommentController();
         $commentController->deleteComment($commentId, $userId);
         echo json_encode(['success' => true]);
-        exit;
     } catch (\Exception $e) {
         http_response_code(400);
         echo json_encode(['error' => $e->getMessage()]);
-        exit;
     }
+    exit;
 
 } elseif ($path === '/post/delete' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_SESSION['user'])) {
@@ -137,20 +132,39 @@ if ($path === '/') {
     try {
         $postController = new PostController();
         $postController->deletePost($postId, $userId);
-
         echo json_encode(['success' => true]);
-        exit;
     } catch (\Exception $e) {
         http_response_code(400);
         echo json_encode(['error' => $e->getMessage()]);
+    }
+    exit;
+
+// --- AJAX like/unlike ---
+} elseif ($path === '/ajax/like' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_SESSION['user'])) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Non connecté']);
         exit;
     }
+    $postController = new PostController();
+    echo json_encode($postController->ajaxLike());
+    exit;
+
+} elseif ($path === '/ajax/unlike' && $_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_SESSION['user'])) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'Non connecté']);
+        exit;
+    }
+    $postController = new PostController();
+    echo json_encode($postController->ajaxUnlike());
+    exit;
 
 } else {
     $data = ['title' => 'Erreur', 'content' => '404 - Page non trouvée'];
 }
 
+// --- Rendu de la page ---
 $title = $data['title'];
 $content = $data['content'];
-
 require_once __DIR__ . '/../templates/layout.php';

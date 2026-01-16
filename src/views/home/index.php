@@ -38,7 +38,7 @@
 <?php endif; ?>
 
 <div class="mx-auto rounded posts-container" x-data>
-    <h2>Post</h2>
+    <h2>Posts</h2>
     <?php if (!empty($posts)): ?>
     <div class="d-grid p-2 mx-auto gap-2" style="grid-template-columns: repeat(4, 1fr);">
         <?php foreach ($posts as $index => $post): ?>
@@ -69,6 +69,18 @@
 
             <p><?= nl2br(htmlspecialchars($post['content'])) ?></p>
             <small>Par <strong><?= htmlspecialchars($post['username']) ?></strong></small>
+
+            <!-- Like button -->
+            <div class="mt-2">
+                <?php if(isset($_SESSION['user'])): ?>
+                    <button class="like-btn btn btn-sm <?= $post['likedByUser'] ? 'btn-primary' : 'btn-outline-primary' ?>"
+                            data-post-id="<?= $post['id'] ?>">
+                        ❤️ <span class="like-count"><?= $post['likes'] ?></span>
+                    </button>
+                <?php else: ?>
+                    <span>❤️ <?= $post['likes'] ?></span>
+                <?php endif; ?>
+            </div>
 
             <?php if (isset($_SESSION['user']) && $_SESSION['user']['id'] == $post['idUser']): ?>
             <button class="delete-post btn btn-sm btn-danger mt-2" 
@@ -136,6 +148,7 @@
 </div>
 
 <script>
+// --- Commentaires ---
 document.querySelectorAll('.comment-form').forEach(form => {
     form.addEventListener('submit', async e => {
         e.preventDefault();
@@ -159,42 +172,10 @@ document.querySelectorAll('.comment-form').forEach(form => {
             const newComment = document.createElement('div');
             newComment.classList.add('comment');
             newComment.id = 'comment-' + data.id;
-            newComment.setAttribute('x-data','{show:false}');
-            newComment.setAttribute('x-init','setTimeout(() => show=true,0)');
-            newComment.setAttribute('x-show','show');
-            newComment.setAttribute('x-transition:enter','transition ease-out duration-300');
-            newComment.setAttribute('x-transition:enter-start','opacity-0 translate-x-4');
-            newComment.setAttribute('x-transition:enter-end','opacity-100 translate-x-0');
-
-            const username = document.createElement('strong');
-            username.textContent = data.username;
-            newComment.appendChild(username);
-            newComment.appendChild(document.createTextNode(' : '));
-
-            const contentSpan = document.createElement('span');
-            contentSpan.innerHTML = data.content.replace(/\n/g,'<br>');
-            newComment.appendChild(contentSpan);
-
-            if(data.isAuthor){
-                const deleteBtn = document.createElement('button');
-                deleteBtn.classList.add('delete-comment','btn','btn-sm','btn-danger','ms-2');
-                deleteBtn.textContent = 'Supprimer';
-                deleteBtn.dataset.commentId = data.id;
-                deleteBtn.style.transition='transform 0.2s';
-                deleteBtn.addEventListener('mouseenter',()=>deleteBtn.style.transform='scale(1.05)');
-                deleteBtn.addEventListener('mouseleave',()=>deleteBtn.style.transform='scale(1)');
-                deleteBtn.addEventListener('click', async ()=> {
-                    if(!confirm("Voulez-vous vraiment supprimer ce commentaire ?")) return;
-                    newComment.remove();
-                    const fdata = new FormData();
-                    fdata.append('comment_id', data.id);
-                    await fetch('/ajax/comment/delete', { method:'POST', body:fdata, credentials:'same-origin' });
-                });
-                newComment.appendChild(deleteBtn);
-            }
-
+            newComment.innerHTML = `<strong>${data.username}</strong> : ${data.content.replace(/\n/g,'<br>')} <button class="delete-comment btn btn-sm btn-danger ms-2" data-comment-id="${data.id}">Supprimer</button>`;
             commentsList.appendChild(newComment);
             Alpine.initTree(newComment);
+
             textarea.value='';
             Alpine.$data(form).submitting=false;
         } catch(error){
@@ -205,48 +186,50 @@ document.querySelectorAll('.comment-form').forEach(form => {
     });
 });
 
-// Suppression des posts
-document.querySelectorAll('.delete-post').forEach(button=>{
-    button.addEventListener('click', async ()=>{
-        if(!confirm("Voulez-vous vraiment supprimer ce post ?")) return;
-        const postId = button.dataset.postId;
-        const postDiv = document.getElementById('post-'+postId);
-        const alpineData = Alpine.$data(postDiv);
-        if(alpineData) alpineData.deleting=true;
-        await new Promise(r=>setTimeout(r,300));
-        const fdata = new FormData();
-        fdata.append('post_id', postId);
-        try{
-            const response = await fetch('/post/delete',{method:'POST',body:fdata,credentials:'same-origin'});
-            const data = await response.json();
-            if(data.success){
-                if(postDiv){
-                    if(alpineData) alpineData.show=false;
-                    await new Promise(r=>setTimeout(r,300));
-                    postDiv.remove();
-                }
-            } else{
-                alert(data.error||'Erreur lors de la suppression.');
-                if(alpineData) alpineData.deleting=false;
-            }
-        }catch(error){
-            alert('Erreur serveur. Voir console.');
-            console.error(error);
-            if(alpineData) alpineData.deleting=false;
+// --- Supprimer commentaire ---
+document.addEventListener('click', async e => {
+    if(e.target.classList.contains('delete-comment')){
+        if(!confirm('Voulez-vous supprimer ce commentaire ?')) return;
+
+        const commentId = e.target.dataset.commentId;
+        const commentDiv = document.getElementById('comment-' + commentId);
+
+        const formData = new FormData();
+        formData.append('comment_id', commentId);
+
+        try {
+            const res = await fetch('/ajax/comment/delete', { method:'POST', body: formData, credentials:'same-origin' });
+            const data = await res.json();
+            if(data.success && commentDiv) commentDiv.remove();
+        } catch(err){
+            console.error(err);
+            alert('Erreur serveur.');
         }
-    });
+    }
 });
 
-// Suppression des commentaires existants
-document.querySelectorAll('.delete-comment').forEach(button=>{
-    button.addEventListener('click', async ()=>{
-        if(!confirm("Voulez-vous vraiment supprimer ce commentaire ?")) return;
-        const commentId = button.dataset.commentId;
-        const commentDiv = document.getElementById('comment-'+commentId);
-        commentDiv.remove();
-        const fdata = new FormData();
-        fdata.append('comment_id', commentId);
-        await fetch('/ajax/comment/delete',{method:'POST',body:fdata,credentials:'same-origin'});
+// --- Likes ---
+document.querySelectorAll('.like-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+        const postId = btn.dataset.postId;
+        const liked = btn.classList.contains('btn-primary');
+        const formData = new FormData();
+        formData.append('post_id', postId);
+
+        try {
+            const url = liked ? '/ajax/unlike' : '/ajax/like';
+            const res = await fetch(url, { method: 'POST', body: formData, credentials:'same-origin' });
+            const data = await res.json();
+            if(data.success) {
+                btn.classList.toggle('btn-primary');
+                btn.classList.toggle('btn-outline-primary');
+                btn.querySelector('.like-count').textContent = data.likes;
+            } else {
+                alert(data.error || 'Erreur like');
+            }
+        } catch(e) {
+            console.error('Erreur like:', e);
+        }
     });
 });
 </script>
