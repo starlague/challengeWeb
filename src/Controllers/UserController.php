@@ -33,7 +33,7 @@ class UserController {
         $content = ob_get_clean();
         
         return [
-            'title' => 'Connexion',
+            'title' => 'Profil',
             'content' => $content,
             'user' => $user
         ];
@@ -53,7 +53,7 @@ class UserController {
         $content = ob_get_clean();
         
         return [
-            'title' => 'Connexion',
+            'title' => 'Modification du profil',
             'content' => $content,
             'user' => $user
         ];
