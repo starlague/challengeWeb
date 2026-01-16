@@ -38,6 +38,7 @@
 <?php endif; ?>
 
 <div class="mx-auto rounded posts-container" x-data>
+    <h2>Post</h2>
     <?php if (!empty($posts)): ?>
     <div class="d-grid p-2 mx-auto gap-2" style="grid-template-columns: repeat(4, 1fr);">
         <?php foreach ($posts as $index => $post): ?>
@@ -62,7 +63,7 @@
                  x-transition:enter="transition ease-out duration-500"
                  x-transition:enter-start="opacity-0 scale-95"
                  x-transition:enter-end="opacity-100 scale-100">
-                <img src="/assets/uploads/<?= htmlspecialchars($post['image']) ?>" alt="<?= htmlspecialchars($post['title']) ?>">
+                <img src="/assets/img/uploads/<?= htmlspecialchars($post['image']) ?>" alt="<?= htmlspecialchars($post['title']) ?>">
             </div>
             <?php endif; ?>
 
