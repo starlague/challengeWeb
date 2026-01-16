@@ -1,5 +1,11 @@
 <?php if (isset($_SESSION['user'])): ?>
-  <div class="mx-auto post-form rounded mb-5">
+  <div class="mx-auto post-form rounded mb-5" 
+       x-data="{ show: false }" 
+       x-init="setTimeout(() => show = true, 100)"
+       x-show="show"
+       x-transition:enter="transition ease-out duration-500"
+       x-transition:enter-start="opacity-0 translate-y-4"
+       x-transition:enter-end="opacity-100 translate-y-0">
       <form method="POST" enctype="multipart/form-data" class="p-4 d-flex flex-column gap-2">
           <h2>Créer un post</h2>
           <div>
@@ -12,25 +18,51 @@
               <input type="file" name="image" accept="image/*" class="form-control">
           </div>
           <div>
-              <button type="submit" class="publish mt-1">Publier</button>
+              <button type="submit" class="publish mt-1" 
+                      x-data 
+                      x-on:mouseenter="$el.style.transform = 'scale(1.05)'" 
+                      x-on:mouseleave="$el.style.transform = 'scale(1)'"
+                      style="transition: transform 0.2s;">Publier</button>
           </div>
       </form>
   </div>
 <?php else: ?>
-    <div class="ms-5">
+    <div class="ms-5" 
+         x-data="{ show: false }" 
+         x-init="setTimeout(() => show = true, 100)"
+         x-show="show"
+         x-transition:enter="transition ease-out duration-500"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100">
         <p>Connectez-vous pour publier un post.</p>
     </div>
 <?php endif; ?>
 
-<div class="mx-auto rounded posts-container">
+<div class="mx-auto rounded posts-container" x-data>
     <?php if (!empty($posts)): ?>
         <div class="d-grid p-2 mx-auto gap-2" style="grid-template-columns: repeat(4, 1fr);">
-        <?php foreach ($posts as $post): ?>
-            <div class="post rounded" id="post-<?= $post['id'] ?>">
+        <?php foreach ($posts as $index => $post): ?>
+            <div class="post rounded" 
+                 id="post-<?= $post['id'] ?>"
+                 x-data="{ show: false, deleting: false }"
+                 x-init="setTimeout(() => show = true, <?= $index * 100 ?>)"
+                 x-show="show && !deleting"
+                 x-transition:enter="transition ease-out duration-500"
+                 x-transition:enter-start="opacity-0 scale-95 translate-y-4"
+                 x-transition:enter-end="opacity-100 scale-100 translate-y-0"
+                 x-transition:leave="transition ease-in duration-300"
+                 x-transition:leave-start="opacity-100 scale-100"
+                 x-transition:leave-end="opacity-0 scale-95">
                 <h3><?= htmlspecialchars($post['title']) ?></h3>
 
                 <?php if (!empty($post['image'])): ?>
-                    <div class="container-img">
+                    <div class="container-img" 
+                         x-data="{ loaded: false }"
+                         x-init="setTimeout(() => loaded = true, <?= ($index * 100) + 200 ?>)"
+                         x-show="loaded"
+                         x-transition:enter="transition ease-out duration-500"
+                         x-transition:enter-start="opacity-0 scale-95"
+                         x-transition:enter-end="opacity-100 scale-100">
                         <img src="/assets/uploads/<?= htmlspecialchars($post['image']) ?>" alt="<?= htmlspecialchars($post['title']) ?>">
                     </div>
                 <?php endif; ?>
@@ -39,28 +71,52 @@
                 <small>Par <strong><?= htmlspecialchars($post['username']) ?></strong></small>
 
                 <?php if (isset($_SESSION['user']) && $_SESSION['user']['id'] == $post['idUser']): ?>
-                    <button class="delete-post btn btn-sm btn-danger mt-2" data-post-id="<?= $post['id'] ?>">Supprimer</button>
+                    <button class="delete-post btn btn-sm btn-danger mt-2" 
+                            data-post-id="<?= $post['id'] ?>"
+                            x-data
+                            x-on:mouseenter="$el.style.transform = 'scale(1.1)'"
+                            x-on:mouseleave="$el.style.transform = 'scale(1)'"
+                            style="transition: transform 0.2s;">Supprimer</button>
                 <?php endif; ?>
 
                 <div class="comments mt-3">
                     <h4>Commentaires :</h4>
-                    <div class="comments-list">
+                    <div class="comments-list" x-data="{ comments: <?= htmlspecialchars(json_encode($post['comments']), ENT_QUOTES, 'UTF-8') ?> }">
                         <?php if (!empty($post['comments'])): ?>
-                            <?php foreach ($post['comments'] as $comment): ?>
-                                <div class="comment">
+                            <?php foreach ($post['comments'] as $commentIndex => $comment): ?>
+                                <div class="comment"
+                                     x-data="{ show: false }"
+                                     x-init="setTimeout(() => show = true, <?= $commentIndex * 50 ?>)"
+                                     x-show="show"
+                                     x-transition:enter="transition ease-out duration-300"
+                                     x-transition:enter-start="opacity-0 translate-x-4"
+                                     x-transition:enter-end="opacity-100 translate-x-0">
                                     <strong><?= htmlspecialchars($comment['username']) ?></strong> :
                                     <?= nl2br(htmlspecialchars($comment['content'])) ?>
                                 </div>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <p>Aucun commentaire pour le moment.</p>
+                            <p x-show="comments.length === 0" 
+                               x-transition:enter="transition ease-out duration-300"
+                               x-transition:enter-start="opacity-0"
+                               x-transition:enter-end="opacity-100">Aucun commentaire pour le moment.</p>
                         <?php endif; ?>
                     </div>
 
                     <?php if (isset($_SESSION['user'])): ?>
-                        <form class="comment-form" data-post-id="<?= $post['id'] ?>">
+                        <form class="comment-form" 
+                              data-post-id="<?= $post['id'] ?>"
+                              x-data="{ submitting: false }"
+                              x-on:submit="submitting = true">
                             <textarea name="comment_content" placeholder="Écrire un commentaire..." required></textarea>
-                            <button type="submit">Commenter</button>
+                            <button type="submit" 
+                                    x-bind:disabled="submitting"
+                                    x-on:mouseenter="if(!submitting) $el.style.transform = 'scale(1.05)'"
+                                    x-on:mouseleave="$el.style.transform = 'scale(1)'"
+                                    style="transition: transform 0.2s;">
+                                <span x-show="!submitting">Commenter</span>
+                                <span x-show="submitting">Envoi...</span>
+                            </button>
                         </form>
                     <?php endif; ?>
                 </div>
@@ -68,7 +124,12 @@
         <?php endforeach; ?>
         </div>
     <?php else: ?>
-        <p>Aucun post pour le moment.</p>
+        <p x-data="{ show: false }" 
+           x-init="setTimeout(() => show = true, 200)"
+           x-show="show"
+           x-transition:enter="transition ease-out duration-500"
+           x-transition:enter-start="opacity-0"
+           x-transition:enter-end="opacity-100">Aucun post pour le moment.</p>
     <?php endif; ?>
 </div>
 
@@ -92,18 +153,67 @@ document.querySelectorAll('.comment-form').forEach(form => {
             const data = JSON.parse(text);
 
             const commentsList = form.closest('.comments').querySelector('.comments-list');
+            
+            // Remove "no comments" message if it exists
             const noCommentMsg = commentsList.querySelector('p');
-            if (noCommentMsg) noCommentMsg.remove();
+            if (noCommentMsg && noCommentMsg.textContent.includes('Aucun commentaire')) {
+                noCommentMsg.remove();
+            }
 
+            // Get Alpine.js data and add to array
+            const alpineData = Alpine.$data(commentsList);
+            if (alpineData && alpineData.comments) {
+                // Add new comment to Alpine.js data
+                alpineData.comments.push({
+                    username: data.username,
+                    content: data.content
+                });
+            }
+
+            // Create and append the new comment element with Alpine.js animation
             const newComment = document.createElement('div');
             newComment.classList.add('comment');
-            newComment.innerHTML = `<strong>${data.username}</strong> : ${data.content}`;
+            
+            // Set Alpine.js attributes for animation
+            newComment.setAttribute('x-data', '{ show: false }');
+            newComment.setAttribute('x-init', 'setTimeout(() => show = true, 0)');
+            newComment.setAttribute('x-show', 'show');
+            newComment.setAttribute('x-transition:enter', 'transition ease-out duration-300');
+            newComment.setAttribute('x-transition:enter-start', 'opacity-0 translate-x-4');
+            newComment.setAttribute('x-transition:enter-end', 'opacity-100 translate-x-0');
+            
+            // Set content with proper escaping
+            const username = document.createElement('strong');
+            username.textContent = data.username;
+            newComment.appendChild(username);
+            newComment.appendChild(document.createTextNode(' : '));
+            
+            // Add content with line breaks
+            const contentSpan = document.createElement('span');
+            contentSpan.innerHTML = data.content.replace(/\n/g, '<br>');
+            newComment.appendChild(contentSpan);
+            
+            // Append to comments list
             commentsList.appendChild(newComment);
+            
+            // Initialize Alpine.js on the new element
+            Alpine.initTree(newComment);
 
+            // Clear textarea
             textarea.value = '';
+            
+            // Reset submitting state
+            const alpineForm = Alpine.$data(form);
+            if (alpineForm) {
+                alpineForm.submitting = false;
+            }
         } catch (error) {
             alert('Erreur serveur. Voir console.');
             console.error(error);
+            const alpineForm = Alpine.$data(form);
+            if (alpineForm) {
+                alpineForm.submitting = false;
+            }
         }
     });
 });
@@ -113,6 +223,16 @@ document.querySelectorAll('.delete-post').forEach(button => {
         if (!confirm("Voulez-vous vraiment supprimer ce post ?")) return;
 
         const postId = button.dataset.postId;
+        const postDiv = document.getElementById('post-' + postId);
+        
+        // Get Alpine.js data and set deleting to true
+        const alpineData = Alpine.$data(postDiv);
+        if (alpineData) {
+            alpineData.deleting = true;
+            // Wait for animation to complete
+            await new Promise(resolve => setTimeout(resolve, 300));
+        }
+
         const formData = new FormData();
         formData.append('post_id', postId);
 
@@ -123,14 +243,25 @@ document.querySelectorAll('.delete-post').forEach(button => {
             const data = JSON.parse(text);
 
             if (data.success) {
-                const postDiv = document.getElementById('post-' + postId);
-                if (postDiv) postDiv.remove();
+                if (postDiv) {
+                    if (alpineData) {
+                        alpineData.show = false;
+                        await new Promise(resolve => setTimeout(resolve, 300));
+                    }
+                    postDiv.remove();
+                }
             } else {
                 alert(data.error || 'Erreur lors de la suppression.');
+                if (alpineData) {
+                    alpineData.deleting = false;
+                }
             }
         } catch (error) {
             alert('Erreur serveur. Voir console.');
             console.error(error);
+            if (alpineData) {
+                alpineData.deleting = false;
+            }
         }
     });
 });
