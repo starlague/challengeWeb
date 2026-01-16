@@ -24,10 +24,34 @@ class PostController {
         if (!$post) throw new \Exception("Post introuvable");
         if ($post['idUser'] != $userId) throw new \Exception("Vous ne pouvez pas supprimer ce post");
 
-        if (!empty($post['image']) && file_exists(__DIR__ . '/../../public/assets/uploads/' . $post['image'])) {
-            unlink(__DIR__ . '/../../public/assets/uploads/' . $post['image']);
+        if (!empty($post['image']) && file_exists(__DIR__ . '/../../public/assets/img/uploads/' . $post['image'])) {
+            unlink(__DIR__ . '/../../public/assets/img/uploads/' . $post['image']);
         }
 
         Post::delete($postId);
+    }
+
+    public function showPost(){
+        if (!isset($_SESSION['user'])) {
+            $_SESSION['error'] = "Vous devez être connecté pour voir cette page.";
+            header('Location: /login');
+            exit;
+        }
+
+        $user = $_SESSION['user'];
+
+        $postModel = new Post();
+        $posts = $postModel->getUserPost($user['id']);
+
+        ob_start();
+        require __DIR__ . '/../views/post/index.php';
+        $content = ob_get_clean();
+        
+        return [
+            'title' => 'Post',
+            'content' => $content,
+            'user' => $user,
+            'posts' => $posts
+        ];
     }
 }

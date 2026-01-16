@@ -16,8 +16,8 @@
     <h1 class="ms-4">TalkSpace</h1>
     <nav class="d-flex gap-3 align-items-center justify-content-center">
         <a href="/" class="link" x-data x-on:mouseenter="$el.style.transform = 'scale(1.05)'" x-on:mouseleave="$el.style.transform = 'scale(1)'" style="transition: transform 0.2s;">Accueil <i class="bi bi-house"></i></a>
-        <a href="/users" class="link" x-data x-on:mouseenter="$el.style.transform = 'scale(1.05)'" x-on:mouseleave="$el.style.transform = 'scale(1)'" style="transition: transform 0.2s;">Utilisateurs <i class="bi bi-people"></i></a>
         <a href="/profil" class="link" x-data x-on:mouseenter="$el.style.transform = 'scale(1.05)'" x-on:mouseleave="$el.style.transform = 'scale(1)'" style="transition: transform 0.2s;">Votre profil<i class="bi bi-person"></i></a>
+        <a href="/post" class="link" x-data x-on:mouseenter="$el.style.transform = 'scale(1.05)'" x-on:mouseleave="$el.style.transform = 'scale(1)'" style="transition: transform 0.2s;">Vos post <i class="bi bi-card-text"></i></a>
     </nav>
     <div class="d-flex gap-2 ms-auto align-items-center">
         <?php if (!isset($_SESSION['user'])): ?>

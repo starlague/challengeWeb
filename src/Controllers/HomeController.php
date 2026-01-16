@@ -20,7 +20,7 @@ class HomeController {
                 if (isset($_FILES['image']) && $_FILES['image']['error'] === UPLOAD_ERR_OK) {
                     $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
                     $imageName = uniqid() . '.' . $ext;
-                    move_uploaded_file($_FILES['image']['tmp_name'], __DIR__ . '/../../public/assets/uploads/' . $imageName);
+                    move_uploaded_file($_FILES['image']['tmp_name'], __DIR__ . '/../../public/assets/img/uploads/' . $imageName);
                 }
 
                 $postController->createPost($idUser, $title, $content, $imageName);

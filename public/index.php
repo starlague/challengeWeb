@@ -20,10 +20,6 @@ $data = ['title' => 'Blog', 'content' => ''];
 if ($path === '/') {
     $controller = new HomeController();
     $data = $controller->index();
-// User list
-} elseif ($path === '/users') {
-    $controller = new UserController();
-    $data = $controller->listUsers();
 // Regstration
 } elseif ($path === '/register') {
     $controller = new RegisterController();
@@ -145,7 +141,10 @@ if ($path === '/') {
         echo json_encode(['error' => $e->getMessage()]);
         exit;
     }
-
+// user post
+} elseif ($path === '/post') {
+    $controller = new PostController();
+    $data = $controller->showPost();
 } else {
     $data = ['title' => 'Erreur', 'content' => '404 - Page non trouvée'];
 }
