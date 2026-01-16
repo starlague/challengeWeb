@@ -1,5 +1,8 @@
+<!-- Container for update profile form with Alpine.js state for error display -->
 <div x-data="{ showError: <?= !empty($_SESSION['error']) ? 'true' : 'false' ?> }">
+
     <?php if (!empty($_SESSION['error'])): ?>
+        <!-- Display error message if session contains an error -->
         <div style="color: red; padding: 10px; background: #ffe0e0; border-radius: 5px; margin-bottom: 20px;"
              x-show="showError"
              x-transition:enter="transition ease-out duration-300"
@@ -10,8 +13,10 @@
              x-transition:leave-end="opacity-0">
             ❌ <?= htmlspecialchars($_SESSION['error']) ?>
         </div>
-        <?php unset($_SESSION['error']); ?>
+        <?php unset($_SESSION['error']); // Clear the error after displaying ?>
     <?php endif; ?>
+
+    <!-- Centered form container with enter transition -->
     <div class="d-flex justify-content-center"
          x-data="{ loaded: false }"
          x-init="setTimeout(() => loaded = true, 100)"
@@ -19,7 +24,11 @@
          x-transition:enter="transition ease-out duration-500"
          x-transition:enter-start="opacity-0 translate-y-4"
          x-transition:enter-end="opacity-100 translate-y-0">
+
+        <!-- Profile update form -->
         <form action="/profil/update" method="post" class="w-50 d-flex flex-column gap-3" enctype="multipart/form-data">
+
+            <!-- Username input field with current value as placeholder and focus styling -->
             <div x-data="{ focused: false }">
                 <label for="username">Pseudo : </label>
                 <input type="text" 
@@ -33,6 +42,7 @@
                        style="transition: border-color 0.3s;">
             </div>
 
+            <!-- Bio textarea field with current value and focus styling -->
             <div x-data="{ focused: false }">
                 <label for="bio">Bio : </label>
                 <textarea name="bio" 
@@ -44,6 +54,7 @@
                           style="transition: border-color 0.3s;"><?= htmlspecialchars($user['bio']) ?></textarea>
             </div>
 
+            <!-- Email input field with current value as placeholder and focus styling -->
             <div x-data="{ focused: false }">
                 <label for="email">Email : </label>
                 <input type="email" 
@@ -57,6 +68,7 @@
                        style="transition: border-color 0.3s;">
             </div>
         
+            <!-- Password input field with focus styling; leave empty to keep old password -->
             <div x-data="{ focused: false }">
                 <label for="password">Mot de passe : </label>
                 <input type="password" 
@@ -69,6 +81,7 @@
                        style="transition: border-color 0.3s;">
             </div>
 
+            <!-- Submit button with hover scale effect -->
             <div>
                 <button type="submit" 
                         class="submit"
