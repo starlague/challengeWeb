@@ -44,6 +44,7 @@ class Post {
             $post['comments'] = Comment::getByPost($post['id']);
         }
         return $posts;
+    }
     public function getUserPost(int $idUser) {
         $pdo = Database::getInstance();
         $stmt = $pdo->prepare("SELECT * FROM post WHERE idUser = ?");
