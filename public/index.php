@@ -75,11 +75,13 @@ if ($path === '/') {
         exit;
     }
 
-    $commentController->createComment($idPost, $idUser, $content);
+    $result = $commentController->createComment($idPost, $idUser, $content);
 
     echo json_encode([
+        'id' => $result['id'],
         'username' => $_SESSION['user']['username'],
-        'content' => htmlspecialchars($content)
+        'content' => htmlspecialchars($content),
+        'isAuthor' => $result['isAuthor']
     ]);
     exit;
 
@@ -103,11 +105,12 @@ if ($path === '/') {
         $commentController = new CommentController();
         $commentController->deleteComment($commentId, $userId);
         echo json_encode(['success' => true]);
+        exit;
     } catch (\Exception $e) {
         http_response_code(400);
         echo json_encode(['error' => $e->getMessage()]);
+        exit;
     }
-    exit;
 
 } elseif ($path === '/post/delete' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!isset($_SESSION['user'])) {
@@ -128,12 +131,14 @@ if ($path === '/') {
     try {
         $postController = new PostController();
         $postController->deletePost($postId, $userId);
+
         echo json_encode(['success' => true]);
+        exit;
     } catch (\Exception $e) {
         http_response_code(400);
         echo json_encode(['error' => $e->getMessage()]);
+        exit;
     }
-    exit;
 
 } else {
     $data = ['title' => 'Erreur', 'content' => '404 - Page non trouvée'];
@@ -141,4 +146,5 @@ if ($path === '/') {
 
 $title = $data['title'];
 $content = $data['content'];
+
 require_once __DIR__ . '/../templates/layout.php';

@@ -6,14 +6,15 @@ use App\Models\Comment;
 class CommentController {
 
     public function createComment($idPost, $idUser, $content) {
-        Comment::create($idPost, $idUser, $content);
+        $idComment = Comment::create($idPost, $idUser, $content);
+        return ['id' => $idComment, 'isAuthor' => true]; // l'auteur est toujours l'utilisateur courant
     }
 
     public function getCommentsForPost($idPost) {
         return Comment::getByPost($idPost);
     }
 
-    public function deleteComment($commentId, $userId) {
-        Comment::deleteByIdAndUser($commentId, $userId);
+    public function deleteComment($idComment, $idUser) {
+        Comment::delete($idComment, $idUser);
     }
 }
