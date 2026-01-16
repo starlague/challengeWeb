@@ -13,7 +13,10 @@
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 <header class="p-2 mb-5 m-2 sticky-top d-grid" style="grid-template-columns: repeat(3, 1fr);" x-data="{ loaded: false }" x-init="loaded = true" x-show="loaded" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0">
-    <h1 class="ms-4">TalkSpace</h1>
+    <div class="d-flex gap-2 align-items-center">
+        <img src="/assets/img/logo-simple.png" alt="" class="logo img-fluid">
+        <h1>TalkSpace</h1>
+    </div>
     <nav class="d-flex gap-3 align-items-center justify-content-center">
         <a href="/" class="link" x-data x-on:mouseenter="$el.style.transform = 'scale(1.05)'" x-on:mouseleave="$el.style.transform = 'scale(1)'" style="transition: transform 0.2s;">Accueil <i class="bi bi-house"></i></a>
         <a href="/profil" class="link" x-data x-on:mouseenter="$el.style.transform = 'scale(1.05)'" x-on:mouseleave="$el.style.transform = 'scale(1)'" style="transition: transform 0.2s;">Votre profil<i class="bi bi-person"></i></a>
