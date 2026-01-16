@@ -7,7 +7,7 @@ class CommentController {
 
     public function createComment($idPost, $idUser, $content) {
         $idComment = Comment::create($idPost, $idUser, $content);
-        return ['id' => $idComment, 'isAuthor' => true]; // l'auteur est toujours l'utilisateur courant
+        return ['id' => $idComment, 'isAuthor' => true]; // The author is always the current user
     }
 
     public function getCommentsForPost($idPost) {

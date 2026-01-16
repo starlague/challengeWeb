@@ -34,4 +34,11 @@ class Post {
         $stmt = $pdo->prepare("DELETE FROM post WHERE id = ?");
         $stmt->execute([$id]);
     }
+
+    public function getUserPost(int $idUser) {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("SELECT * FROM post WHERE idUser = ?");
+        $stmt->execute([$idUser]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    }
 }
