@@ -32,12 +32,7 @@ if ($path === '/') {
     // Home page route
     $controller = new HomeController();
     $data = $controller->index();
-
-} elseif ($path === '/users') {
-    // List all users route
-    $controller = new UserController();
-    $data = $controller->listUsers();
-
+// Regstration
 } elseif ($path === '/register') {
     // User registration route
     $controller = new RegisterController();
