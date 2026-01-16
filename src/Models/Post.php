@@ -37,12 +37,17 @@ class Post {
         $stmt->execute([$id]);
     }
 
-    // --- NOUVEAU : récupérer tous les posts avec leurs commentaires ---
+    // Retrieve all posts with their comments
     public static function getAllWithComments() {
         $posts = self::getAll();
         foreach ($posts as &$post) {
             $post['comments'] = Comment::getByPost($post['id']);
         }
         return $posts;
+    public function getUserPost(int $idUser) {
+        $pdo = Database::getInstance();
+        $stmt = $pdo->prepare("SELECT * FROM post WHERE idUser = ?");
+        $stmt->execute([$idUser]);
+        return $stmt->fetchAll(\PDO::FETCH_ASSOC);
     }
 }

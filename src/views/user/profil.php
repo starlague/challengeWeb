@@ -46,12 +46,19 @@
            x-on:mouseenter="$el.style.transform = 'scale(1.1)'"
            x-on:mouseleave="$el.style.transform = 'scale(1)'"
            style="transition: transform 0.2s;">Modifier</a>
-        <a href="/user/delete" 
-           class="delete"
-           x-data
-           x-on:mouseenter="$el.style.transform = 'scale(1.1)'"
-           x-on:mouseleave="$el.style.transform = 'scale(1)'"
-           style="transition: transform 0.2s;">Supprimer</a>
+        <a href="/user/delete"
+            class="delete"
+            x-data
+            x-on:mouseenter="$el.style.transform = 'scale(1.1)'"
+            x-on:mouseleave="$el.style.transform = 'scale(1)'"
+            x-on:click.prevent="
+                if (confirm('Êtes-vous sûr(e) de vouloir supprimer votre compte ? Cette action est irréversible.')) {
+                    window.location.href = '/user/delete'
+                }
+            "
+            style="transition: transform 0.2s;">
+            Supprimer
+        </a>
     </div>
 </div>
 

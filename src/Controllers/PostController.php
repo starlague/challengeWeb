@@ -58,4 +58,28 @@ class PostController {
 
         return ['success' => true, 'likes' => $likes];
     }
+
+    public function showPost(){
+        if (!isset($_SESSION['user'])) {
+            $_SESSION['error'] = "Vous devez être connecté pour voir cette page.";
+            header('Location: /login');
+            exit;
+        }
+
+        $user = $_SESSION['user'];
+
+        $postModel = new Post();
+        $posts = $postModel->getUserPost($user['id']);
+
+        ob_start();
+        require __DIR__ . '/../views/post/index.php';
+        $content = ob_get_clean();
+        
+        return [
+            'title' => 'Post',
+            'content' => $content,
+            'user' => $user,
+            'posts' => $posts
+        ];
+    }
 }

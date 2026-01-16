@@ -26,6 +26,7 @@ if ($path === '/') {
     $controller = new UserController();
     $data = $controller->listUsers();
 
+// Regstration
 } elseif ($path === '/register') {
     $controller = new RegisterController();
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -160,6 +161,10 @@ if ($path === '/') {
     echo json_encode($postController->ajaxUnlike());
     exit;
 
+// user post
+} elseif ($path === '/post') {
+    $controller = new PostController();
+    $data = $controller->showPost();
 } else {
     $data = ['title' => 'Erreur', 'content' => '404 - Page non trouvée'];
 }
